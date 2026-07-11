@@ -1,4 +1,6 @@
-# Levty Team 1 - Frontend
+# Levty Team 1 (Hub Parking) - Frontend
+
+**O Hub Parking é um sistema de gerenciamento de vagas para um estacionamento**
 
 Frontend desenvolvido com **React** e **Vite**.
 
