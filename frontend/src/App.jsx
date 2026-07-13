@@ -1,8 +1,10 @@
+import AppRoutes from "./routes/AppRoutes";
+
 function App() {
 
   return (
     <>
-      <h1>Esse é o HubParking</h1>
+      <AppRoutes />
     </>
   )
 }
