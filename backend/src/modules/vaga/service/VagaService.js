@@ -1,0 +1,39 @@
+const VagaRepository = require('../repository/VagaRepository')
+const PisoRepository = require('../../piso/repository/PisoRepository')
+
+class VagaService {
+    async cadastrarVaga(dados){
+        return await VagaRepository.cadastrarVaga(dados)
+    }
+
+    async listarVagas(){
+        return await VagaRepository.listarVagas()
+    }
+
+    async buscarVagaPorId(id){
+        return await VagaRepository.buscarVagaPorId(id)
+    }
+
+    async buscarVagaPorPisoId(pisoId){
+        const pisoExistente = await PisoRepository.buscarPisoPorId(pisoId)
+
+        if(!pisoExistente) {
+            throw new Error("Ops! Parece que esse piso não existe")
+        }
+
+        return await VagaRepository.buscarVagaPorPisoId(pisoId)
+    }
+
+    async buscarVagasDesocupadas(){
+        const vagasExistentes = await VagaRepository.buscarVagasDesocupadas()
+
+        if (vagasExistentes.length === 0) {
+            throw new Error("Ops! Parece que não existe nenhuma vaga cadastrada.")            
+        }
+
+        return vagasExistentes
+    }
+
+}
+
+module.exports = new VagaService()
