@@ -74,7 +74,9 @@ class EstacionamentoController {
                 req.params.id
             )
 
-            return res.status(200).json(estacionamento)
+            return res.status(200).json({
+                sucesso: 'Estacionamento apagado com sucesso!'
+            })
         } catch (error) {
             return res.status(500).json({
                 erro: error.message

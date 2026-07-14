@@ -41,7 +41,7 @@ class EstacionamentoService {
             throw new Error("Ops! Estacionamento não encontrado.")
         }
 
-        if(dados.cnpj && dados.npj !== estacionamentoExistente.cnpj) {
+        if(dados.cnpj && dados.cnpj !== estacionamentoExistente.cnpj) {
             const outro = await EstacionamentoRepository.buscarEstacionamentoPorCnpj(dados.cnpj)
         
             if(outro){
