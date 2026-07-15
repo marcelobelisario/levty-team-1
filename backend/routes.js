@@ -6,6 +6,7 @@ const pessoaRoutes = require("./src/modules/pessoa/routes/pessoa.routes")
 const vagaRoutes = require("./src/modules/vaga/routes/vaga.routes")
 const turnoRoutes = require("./src/modules/turno/routes/turno.routes")
 const veiculoRoutes = require("./src/modules/veiculo/routes/veiculo.routes")
+const veiculoVagaRoutes = require("./src/modules/veiculoVaga/routes/veiculoVaga.routes")
 
 const rotas = Router()
 
@@ -15,5 +16,6 @@ rotas.use('/pessoa', pessoaRoutes)
 rotas.use('/vagas', vagaRoutes)
 rotas.use('/turnos', turnoRoutes)
 rotas.use('/veiculo', veiculoRoutes)
+rotas.use('/veiculo-vaga', veiculoVagaRoutes)
 
 module.exports = rotas
