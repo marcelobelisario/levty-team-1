@@ -1,13 +1,12 @@
-//import AppRoutes from "./routes/AppRoutes";
-
-import Login from "./pages/login"
+// import AppRoutes from "./routes/AppRoutes";
+import AdminLayout from "./layouts/AdminLayout";
+import Dashboard from "./pages/administrador/Dashboard";
 
 function App() {
-
   return (
-    <>
-      <Login />
-    </>
+    <AdminLayout>
+      <Dashboard />
+    </AdminLayout>
   )
 }
 
