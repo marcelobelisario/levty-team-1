@@ -1,0 +1,100 @@
+# Implementação do Swagger e Middleware de Admin
+
+Este plano descreve como estruturar a documentação da API usando o Swagger e a criação de um middleware para validação de administrador no backend.
+
+## Estrutura Proposta
+
+A estrutura de pastas e arquivos para suportar o Swagger e o middleware será a seguinte:
+
+```diff
+ backend/
+   package.json
+   app.js
+   routes.js
+   src/
++    middlewares/
++      isAdmin.js           <-- Middleware para verificar se o usuário é administrador
++      auth.js              <-- (Opcional, caso ainda não exista) Middleware para pegar o usuário logado via Token
++    docs/
++      swagger.js           <-- Arquivo de configuração principal do Swagger
+     modules/
+       pessoa/
+         routes/
+           pessoa.routes.js <-- Onde adicionaremos as anotações do Swagger e os middlewares
+```
+
+### 1. Configuração do Swagger
+
+Precisaremos instalar as bibliotecas `swagger-ui-express` e `swagger-jsdoc`.
+
+**Instalação de Pacotes:**
+```bash
+npm install swagger-ui-express swagger-jsdoc
+```
+
+**Arquivo `src/docs/swagger.js`:**
+Este arquivo conterá as definições básicas da API (título, versão, descrição) e apontará para onde os arquivos de rotas estão, para que o Swagger possa ler os comentários e gerar a documentação automaticamente.
+
+**Modificação no `app.js`:**
+Iremos importar o `swagger-ui-express` e as configurações que criamos, e adicionar uma nova rota (ex: `/api-docs`) para exibir a interface do Swagger.
+```javascript
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = require('./src/docs/swagger');
+
+//...
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+```
+
+**Documentando as Rotas (exemplo no `pessoa.routes.js`):**
+Utilizaremos comentários no padrão JSDoc acima de cada rota para documentar os endpoints.
+```javascript
+/**
+ * @swagger
+ * /pessoa:
+ *   get:
+ *     summary: Retorna a lista de pessoas
+ *     tags: [Pessoa]
+ *     responses:
+ *       200:
+ *         description: Lista de pessoas
+ */
+rotas.get('/', PessoaController.listarTodasPessoas)
+```
+
+### 2. Middleware de Administrador (`isAdmin.js`)
+
+O middleware de admin será criado na pasta `src/middlewares`. 
+
+**Arquivo `src/middlewares/isAdmin.js`:**
+Ele irá verificar se a requisição contém as informações do usuário (geralmente inseridas por um middleware de autenticação prévio) e checar se ele possui o papel (role) de 'admin'.
+
+```javascript
+const isAdmin = (req, res, next) => {
+  // O usuário geralmente é injetado no req através de um middleware de autenticação (ex: JWT)
+  if (req.user && req.user.role === 'admin') {
+    return next();
+  }
+  
+  return res.status(403).json({ message: "Acesso negado: requer privilégios de administrador." });
+};
+
+module.exports = isAdmin;
+```
+
+**Uso nas Rotas:**
+O middleware será importado e adicionado antes da função do controller nas rotas que precisarem de proteção.
+```javascript
+const isAdmin = require('../../middlewares/isAdmin');
+// Exemplo: Somente admin pode deletar pessoa
+rotas.delete('/:id', isAdmin, PessoaController.deletarPessoa)
+```
+
+## Open Questions
+
+> [!WARNING]
+> - **Autenticação:** O middleware de `isAdmin` pressupõe que já exista uma forma de saber *quem* é o usuário atual (ex: um token JWT que nos diz o perfil do usuário). Vocês já possuem um sistema de login (JWT) implementado, ou precisamos criar o fluxo de login/token também?
+> - **Onde definir as roles (admin):** Como sabemos que o usuário é admin? A tabela `pessoas` ou `usuarios` no banco de dados tem uma coluna `role` ou `isAdmin`?
+
+## User Review Required
+
+Por favor, valide se a estrutura e as ferramentas sugeridas atendem ao padrão esperado. Se aprovar, podemos começar a instalar os pacotes e implementar!
