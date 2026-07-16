@@ -5,8 +5,14 @@ const rotas = require("./routes");
 
 const app = express();
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./src/docs/swagger')
+
+
 app.use(express.json());
 app.use(rotas)
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.get("/", (req, res) => {
   return res.json({
