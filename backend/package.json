@@ -5,13 +5,16 @@
     "express": "^5.2.1",
     "knex": "^3.3.0",
     "pg": "^8.22.0",
-    "sqlite3": "^6.0.1"
+    "sqlite3": "^6.0.1",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "scripts": {
     "start": "node app.js"
   },
   "allowScripts": {
     "sqlite3@6.0.1": true,
-    "bcrypt@6.0.0": true
+    "bcrypt@6.0.0": true,
+    "@scarf/scarf@1.4.0": true
   }
 }
