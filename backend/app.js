@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(rotas)
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.get("/", (req, res) => {
   return res.json({
