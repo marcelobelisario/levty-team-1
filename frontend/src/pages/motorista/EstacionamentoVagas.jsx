@@ -192,7 +192,8 @@ export default function EstacionamentoVagas() {
 
                     {meusVeiculos.length === 0 && (
                         <div className="detalhe-aviso detalhe-aviso--erro">
-                            Você não possui veículos cadastrados. Cadastre um veículo antes de estacionar.
+                            Você não possui veículos cadastrados.{" "}
+                            <Link to="/motorista/veiculos">Cadastre um veículo</Link> antes de estacionar.
                         </div>
                     )}
 

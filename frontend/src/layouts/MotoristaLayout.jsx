@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 
 import "./MotoristaLayout.css"
 
@@ -14,6 +14,22 @@ export default function MotoristaLayout({ children }) {
                     <span className="motorista-marca-ponto" />
                     <span>HubParking</span>
                 </Link>
+
+                <nav className="motorista-nav">
+                    <NavLink
+                        to="/motorista"
+                        end
+                        className={({ isActive }) => `motorista-nav-link${isActive ? " motorista-nav-link--ativo" : ""}`}
+                    >
+                        Estacionamentos
+                    </NavLink>
+                    <NavLink
+                        to="/motorista/veiculos"
+                        className={({ isActive }) => `motorista-nav-link${isActive ? " motorista-nav-link--ativo" : ""}`}
+                    >
+                        Meus veículos
+                    </NavLink>
+                </nav>
 
                 <div className="motorista-usuario">
                     <div className="motorista-avatar">
