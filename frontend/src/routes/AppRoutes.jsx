@@ -6,6 +6,9 @@ import Painel from "../pages/painel"
 
 import PrivateRoute from "./PrivateRoute"
 
+import AdminLayout from "../layouts/AdminLayout"
+import Dashboard from "../pages/administrador/Dashboard"
+
 export default function AppRoutes() {
     return (
         <Routes>
@@ -19,6 +22,17 @@ export default function AppRoutes() {
                 element={
                     <PrivateRoute>
                         <Painel />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/admin/dashboard"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <Dashboard />
+                        </AdminLayout>
                     </PrivateRoute>
                 }
             />

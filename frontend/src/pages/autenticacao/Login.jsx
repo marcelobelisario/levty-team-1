@@ -34,8 +34,12 @@ export default function Login() {
         setCarregando(true)
 
         try {
-            await login(formulario)
-            navigate("/painel")
+            const pessoa = await login(formulario)
+            if (pessoa.is_admin) {
+                navigate("/admin/dashboard")
+            } else {
+                navigate("/painel")
+            }
         } catch (error) {
             setErro(error.message)
         } finally {
