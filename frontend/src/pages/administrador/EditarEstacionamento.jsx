@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 
 import "./Estacionamento.css"
 
@@ -22,39 +22,48 @@ const FORMULARIO_INICIAL = {
     ativo: true,
 }
 
-export default function Estacionamento() {
+export default function EditarEstacionamento() {
+    const { id } = useParams()
     const navigate = useNavigate()
 
-    const [modo, setModo] = useState("lista")
-
-    const [estacionamentos, setEstacionamentos] = useState([])
-    const [carregandoLista, setCarregandoLista] = useState(true)
-    const [erroLista, setErroLista] = useState("")
-
     const [formulario, setFormulario] = useState(FORMULARIO_INICIAL)
-    const [cidade, setCidade] = useState(null)
-    const [cidadeSelectKey, setCidadeSelectKey] = useState(0)
+    const [cidadeIdAtual, setCidadeIdAtual] = useState("")
+    const [cidadeNomeInicial, setCidadeNomeInicial] = useState("")
+    const [cidadeSelecionada, setCidadeSelecionada] = useState(null)
+    const [carregando, setCarregando] = useState(true)
     const [erro, setErro] = useState("")
-    const [sucesso, setSucesso] = useState("")
     const [salvando, setSalvando] = useState(false)
 
-    const carregarEstacionamentos = useCallback(async () => {
-        setCarregandoLista(true)
-        setErroLista("")
-
-        try {
-            const resultado = await estacionamentoService.listarTodos()
-            setEstacionamentos(resultado || [])
-        } catch (error) {
-            setErroLista(error.message)
-        } finally {
-            setCarregandoLista(false)
-        }
-    }, [])
-
     useEffect(() => {
-        carregarEstacionamentos()
-    }, [carregarEstacionamentos])
+        async function carregarEstacionamento() {
+            try {
+                const estacionamento = await estacionamentoService.buscarPorId(id)
+
+                setFormulario({
+                    nome: estacionamento.nome,
+                    cnpj: estacionamento.cnpj,
+                    inscricao_estadual: estacionamento.inscricao_estadual != null
+                        ? String(estacionamento.inscricao_estadual)
+                        : "",
+                    indicador_insc_estadual: String(estacionamento.indicador_insc_estadual),
+                    logradouro: estacionamento.logradouro,
+                    numero: String(estacionamento.numero),
+                    bairro: estacionamento.bairro,
+                    email: estacionamento.email || "",
+                    telefone: estacionamento.telefone || "",
+                    ativo: estacionamento.ativo,
+                })
+                setCidadeIdAtual(estacionamento.cidade_id)
+                setCidadeNomeInicial(`${estacionamento.cidade_nome} - ${estacionamento.cidade_uf}`)
+            } catch (error) {
+                setErro(error.message)
+            } finally {
+                setCarregando(false)
+            }
+        }
+
+        carregarEstacionamento()
+    }, [id])
 
     function handleChange(campo) {
         return (e) => {
@@ -63,36 +72,18 @@ export default function Estacionamento() {
         }
     }
 
-    function handleLimpar() {
-        setFormulario(FORMULARIO_INICIAL)
-        setCidade(null)
-        setCidadeSelectKey((atual) => atual + 1)
-        setErro("")
-        setSucesso("")
-    }
-
-    function handleNovoEstacionamento() {
-        handleLimpar()
-        setModo("cadastro")
-    }
-
-    function handleEditarEstacionamento(id) {
-        navigate(`/admin/estacionamento/${id}/editar`)
-    }
-
     function handleVoltarParaLista() {
-        setModo("lista")
-        carregarEstacionamentos()
+        navigate("/admin/estacionamento")
     }
 
-    async function handleCadastro(e) {
+    async function handleSalvar(e) {
         e.preventDefault()
         setErro("")
-        setSucesso("")
 
         const cnpj = formulario.cnpj.replace(/\D/g, "")
         const numero = Number(formulario.numero)
         const indicadorInscEstadual = Number(formulario.indicador_insc_estadual)
+        const cidadeId = cidadeSelecionada?.id || cidadeIdAtual
 
         if (cnpj.length !== 14) {
             setErro("O CNPJ deve conter 14 dígitos.")
@@ -109,7 +100,7 @@ export default function Estacionamento() {
             return
         }
 
-        if (!cidade) {
+        if (!cidadeId) {
             setErro("Selecione a cidade do estacionamento.")
             return
         }
@@ -127,20 +118,16 @@ export default function Estacionamento() {
                 email: formulario.email.trim(),
                 telefone: formulario.telefone.trim(),
                 ativo: formulario.ativo,
-                cidade_id: cidade.id,
+                cidade_id: cidadeId,
             }
 
             if (formulario.inscricao_estadual.trim() !== "") {
                 dados.inscricao_estadual = Number(formulario.inscricao_estadual)
             }
 
-            const estacionamento = await estacionamentoService.cadastrar(dados)
+            await estacionamentoService.editar(id, dados)
 
-            setFormulario(FORMULARIO_INICIAL)
-            setCidade(null)
-            setCidadeSelectKey((atual) => atual + 1)
-            setSucesso(`Estacionamento cadastrado com sucesso: ${estacionamento.nome}.`)
-            carregarEstacionamentos()
+            navigate("/admin/estacionamento")
         } catch (error) {
             setErro(error.message)
         } finally {
@@ -148,28 +135,32 @@ export default function Estacionamento() {
         }
     }
 
-    if (modo === "cadastro") {
-        return (
-            <section className="screen active" id="screen-estacionamento">
-                <div className="estac-card">
+    return (
+        <section className="screen active" id="screen-estacionamento">
+            <div className="estac-card">
 
-                    <div className="estac-card-head">
-                        <div>
-                            <h3>Cadastrar estacionamento</h3>
-                            <div className="hint">
-                                Informe os dados do estacionamento e o endereço onde ele fica.
-                            </div>
+                <div className="estac-card-head">
+                    <div>
+                        <h3>Editar estacionamento</h3>
+                        <div className="hint">
+                            Atualize os dados do estacionamento e o endereço onde ele fica.
                         </div>
-                        <button
-                            type="button"
-                            className="estac-botao-limpar"
-                            onClick={handleVoltarParaLista}
-                        >
-                            Voltar para a lista
-                        </button>
                     </div>
+                    <button
+                        type="button"
+                        className="estac-botao-limpar"
+                        onClick={handleVoltarParaLista}
+                    >
+                        Voltar para a lista
+                    </button>
+                </div>
 
-                    <form className="estac-form" onSubmit={handleCadastro}>
+                {carregando && (
+                    <div className="estac-estado-vazio">Carregando estacionamento...</div>
+                )}
+
+                {!carregando && (
+                    <form className="estac-form" onSubmit={handleSalvar}>
 
                         <div className="estac-linha">
                             <div className="estac-campo">
@@ -268,7 +259,11 @@ export default function Estacionamento() {
 
                             <div className="estac-campo">
                                 <label htmlFor="cidade">Cidade</label>
-                                <CidadeSelect key={cidadeSelectKey} id="cidade" onSelecionar={setCidade} required />
+                                <CidadeSelect
+                                    id="cidade"
+                                    valorInicial={cidadeNomeInicial}
+                                    onSelecionar={setCidadeSelecionada}
+                                />
                             </div>
                         </div>
 
@@ -305,125 +300,23 @@ export default function Estacionamento() {
                         </label>
 
                         {erro && <div className="estac-aviso estac-aviso--erro">{erro}</div>}
-                        {sucesso && <div className="estac-aviso estac-aviso--sucesso">{sucesso}</div>}
 
                         <div className="estac-acoes">
                             <button
                                 type="button"
                                 className="estac-botao-limpar"
-                                onClick={handleLimpar}
+                                onClick={handleVoltarParaLista}
                                 disabled={salvando}
                             >
-                                Limpar
+                                Cancelar
                             </button>
 
                             <Button type="submit" disabled={salvando}>
-                                {salvando ? "Cadastrando..." : "Cadastrar estacionamento"}
+                                {salvando ? "Salvando..." : "Salvar alterações"}
                             </Button>
                         </div>
 
                     </form>
-                </div>
-            </section>
-        )
-    }
-
-    return (
-        <section className="screen active" id="screen-estacionamento">
-            <div className="estac-card estac-card--lista">
-
-                <div className="estac-card-head">
-                    <div>
-                        <h3>Estacionamentos cadastrados</h3>
-                        <div className="hint">
-                            Estacionamentos cadastrados e a cidade onde cada um fica.
-                        </div>
-                    </div>
-                    <Button type="button" onClick={handleNovoEstacionamento}>
-                        + Novo estacionamento
-                    </Button>
-                </div>
-
-                {erroLista && <div className="estac-aviso estac-aviso--erro">{erroLista}</div>}
-
-                {carregandoLista && (
-                    <div className="estac-estado-vazio">Carregando estacionamentos...</div>
-                )}
-
-                {!carregandoLista && !erroLista && estacionamentos.length === 0 && (
-                    <div className="estac-estado-vazio">
-                        Nenhum estacionamento cadastrado ainda.
-                    </div>
-                )}
-
-                {!carregandoLista && estacionamentos.length > 0 && (
-                    <>
-                        <div className="estac-tabela-wrap">
-                            <table className="estac-tabela">
-                                <thead>
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>CNPJ</th>
-                                        <th>Cidade</th>
-                                        <th>Status</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {estacionamentos.map((estacionamento) => (
-                                        <tr key={estacionamento.id}>
-                                            <td>{estacionamento.nome}</td>
-                                            <td className="estac-tabela-mono">{estacionamento.cnpj}</td>
-                                            <td>{estacionamento.cidade_nome} - {estacionamento.cidade_uf}</td>
-                                            <td>
-                                                <span className={`estac-selo ${estacionamento.ativo ? "estac-selo--ativo" : "estac-selo--inativo"}`}>
-                                                    {estacionamento.ativo ? "Ativo" : "Inativo"}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <button
-                                                    type="button"
-                                                    className="estac-botao-editar"
-                                                    onClick={() => handleEditarEstacionamento(estacionamento.id)}
-                                                    title="Editar estacionamento"
-                                                    aria-label={`Editar estacionamento ${estacionamento.nome}`}
-                                                >
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <ul className="estac-lista-mobile">
-                            {estacionamentos.map((estacionamento) => (
-                                <li key={estacionamento.id} className="estac-item-mobile">
-                                    <div className="estac-item-mobile-topo">
-                                        <span className="estac-item-mobile-nome">{estacionamento.nome}</span>
-                                        <button
-                                            type="button"
-                                            className="estac-botao-editar"
-                                            onClick={() => handleEditarEstacionamento(estacionamento.id)}
-                                            title="Editar estacionamento"
-                                            aria-label={`Editar estacionamento ${estacionamento.nome}`}
-                                        >
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                                        </button>
-                                    </div>
-                                    <div className="estac-item-mobile-detalhe">
-                                        {estacionamento.cnpj} · {estacionamento.cidade_nome} - {estacionamento.cidade_uf}
-                                    </div>
-                                    <div className="estac-item-mobile-selos">
-                                        <span className={`estac-selo ${estacionamento.ativo ? "estac-selo--ativo" : "estac-selo--inativo"}`}>
-                                            {estacionamento.ativo ? "Ativo" : "Inativo"}
-                                        </span>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </>
                 )}
             </div>
         </section>

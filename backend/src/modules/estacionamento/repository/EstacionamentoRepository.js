@@ -11,7 +11,24 @@ class EstacionamentoRepository {
 
     async listarTodosEstacionamentos() {
         return await db('estacionamento')
-            .select('*')
+            .join('cidade', 'cidade.id', 'estacionamento.cidade_id')
+            .select(
+                'estacionamento.id',
+                'estacionamento.nome',
+                'estacionamento.cnpj',
+                'estacionamento.logradouro',
+                'estacionamento.bairro',
+                'estacionamento.numero',
+                'estacionamento.email',
+                'estacionamento.telefone',
+                'estacionamento.ativo',
+                'estacionamento.cidade_id',
+                'cidade.nome as cidade_nome',
+                'cidade.uf as cidade_uf',
+                'estacionamento.criado_em',
+                'estacionamento.atualizado_em'
+            )
+            .orderBy('estacionamento.nome')
     }
 
     async buscarEstacionamentoPorCnpj(cnpj){
@@ -22,7 +39,13 @@ class EstacionamentoRepository {
 
     async buscarEstacionamentoPorId(id){
         return await db('estacionamento')
-            .where({ id })
+            .join('cidade', 'cidade.id', 'estacionamento.cidade_id')
+            .select(
+                'estacionamento.*',
+                'cidade.nome as cidade_nome',
+                'cidade.uf as cidade_uf'
+            )
+            .where({ 'estacionamento.id': id })
             .first()
     }
 

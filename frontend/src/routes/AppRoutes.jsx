@@ -9,7 +9,9 @@ import PrivateRoute from "./PrivateRoute"
 import AdminLayout from "../layouts/AdminLayout"
 import Dashboard from "../pages/administrador/Dashboard"
 import Estacionamento from "../pages/administrador/Estacionamento"
+import EditarEstacionamento from "../pages/administrador/EditarEstacionamento"
 import Pisos from "../pages/administrador/Pisos"
+import EditarPiso from "../pages/administrador/EditarPiso"
 import Vagas from "../pages/administrador/Vagas"
 import EditarVaga from "../pages/administrador/EditarVaga"
 
@@ -53,11 +55,33 @@ export default function AppRoutes() {
             />
 
             <Route
+                path="/admin/estacionamento/:id/editar"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <EditarEstacionamento />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
                 path="/admin/pisos"
                 element={
                     <PrivateRoute>
                         <AdminLayout>
                             <Pisos />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/admin/pisos/:id/editar"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <EditarPiso />
                         </AdminLayout>
                     </PrivateRoute>
                 }
