@@ -14,6 +14,7 @@ import Dashboard from "../pages/administrador/Dashboard"
 import Estacionamento from "../pages/administrador/Estacionamento"
 import EditarEstacionamento from "../pages/administrador/EditarEstacionamento"
 import Pisos from "../pages/administrador/Pisos"
+import Turnos from "../pages/administrador/Turnos"
 import EditarPiso from "../pages/administrador/EditarPiso"
 import Vagas from "../pages/administrador/Vagas"
 import EditarVaga from "../pages/administrador/EditarVaga"
@@ -96,6 +97,16 @@ export default function AppRoutes() {
                     <PrivateRoute>
                         <AdminLayout>
                             <Pisos />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/admin/turnos"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <Turnos />
                         </AdminLayout>
                     </PrivateRoute>
                 }
