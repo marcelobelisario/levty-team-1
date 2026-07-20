@@ -16,6 +16,14 @@ function obterTitulo(pathname) {
     return { eyebrow: 'Operação', titulo: 'Editar vaga' };
   }
 
+  if (/^\/admin\/pisos\/.+\/editar$/.test(pathname)) {
+    return { eyebrow: 'Cadastros', titulo: 'Editar piso' };
+  }
+
+  if (/^\/admin\/estacionamento\/.+\/editar$/.test(pathname)) {
+    return { eyebrow: 'Cadastros', titulo: 'Editar estacionamento' };
+  }
+
   return TITULOS[pathname] || TITULO_PADRAO;
 }
 

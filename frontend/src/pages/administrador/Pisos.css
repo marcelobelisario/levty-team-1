@@ -8,9 +8,16 @@
   max-width: 760px;
 }
 
-.piso-card-head { margin-bottom: 20px; }
+.piso-card-head {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
 .piso-card-head h3 { font-family: var(--font-display); font-size: 15.5px; }
 .piso-card-head .hint { font-size: 12px; color: #84959c; margin-top: 3px; }
+.piso-card-head .button { width: auto; padding: 11px 18px; }
 
 .piso-form { display: flex; flex-direction: column; gap: 16px; }
 
@@ -76,10 +83,77 @@
 
 .piso-botao-limpar:hover { border-color: var(--sky-400); color: var(--sky-500); }
 
+/* listagem de pisos */
+.piso-card--lista { max-width: 980px; }
+
+.piso-estado-vazio {
+  padding: 32px 12px;
+  text-align: center;
+  font-size: 13.5px;
+  color: #84959c;
+}
+
+.piso-tabela-wrap { overflow-x: auto; }
+
+.piso-tabela { width: 100%; border-collapse: collapse; font-size: 13px; }
+.piso-tabela thead th {
+  text-align: left; font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+  color: #84959c; font-weight: 600; padding: 10px 14px; border-bottom: 1.5px solid #EAEDEF;
+  background: #FBFCFC; white-space: nowrap;
+}
+.piso-tabela thead th:first-child { border-top-left-radius: 8px; }
+.piso-tabela thead th:last-child { border-top-right-radius: 8px; }
+.piso-tabela tbody td { padding: 13px 14px; border-bottom: 1px solid #F1F3F4; color: var(--ink-900); white-space: nowrap; }
+.piso-tabela tbody tr:hover { background: #FAFDFE; }
+.piso-tabela tbody tr:last-child td { border-bottom: none; }
+.piso-tabela-mono { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .02em; }
+.piso-tabela th:last-child,
+.piso-tabela td:last-child { text-align: center; }
+
+.piso-botao-editar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1.5px solid #E1E7EA;
+  background: var(--white);
+  color: var(--ink-700);
+  cursor: pointer;
+  transition: .15s;
+}
+.piso-botao-editar:hover { border-color: var(--sky-400); color: var(--sky-500); background: var(--sky-100); }
+
+.piso-lista-mobile { display: none; list-style: none; margin: 0; padding: 0; }
+
+.piso-item-mobile {
+  border: 1px solid #EAEDEF;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.piso-item-mobile + .piso-item-mobile { margin-top: 10px; }
+
+.piso-item-mobile-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.piso-item-mobile-nome { font-weight: 600; font-size: 14px; color: var(--ink-900); }
+.piso-item-mobile-topo-direita { display: flex; align-items: center; gap: 10px; }
+.piso-item-mobile-estacionamento { font-size: 12px; color: #84959c; margin-top: 4px; }
+.piso-item-mobile-detalhes { display: flex; gap: 14px; margin-top: 10px; font-size: 12.5px; color: var(--ink-700); }
+
 @media (max-width: 720px) {
   .piso-card { padding: 18px 16px; }
   .piso-linha { grid-template-columns: 1fr; }
   .piso-acoes { flex-direction: column-reverse; }
   .piso-acoes .button,
   .piso-botao-limpar { width: 100%; min-width: 0; }
+  .piso-card-head { flex-direction: column; }
+  .piso-card-head .button { width: 100%; }
+
+  .piso-tabela-wrap { display: none; }
+  .piso-lista-mobile { display: block; }
 }

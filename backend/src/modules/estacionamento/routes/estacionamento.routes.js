@@ -54,7 +54,7 @@ rotas.post("/", EstacionamentoController.cadastrarEstacionamento)
  * @swagger
  * /estacionamentos:
  *   get:
- *     summary: Lista todos os estacionamentos
+ *     summary: Lista todos os estacionamentos, com o nome e UF da cidade de cada um
  *     tags: [Estacionamento]
  *     security:
  *       - bearerAuth: []

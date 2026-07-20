@@ -11,9 +11,10 @@ export default function CidadeSelect({
     id,
     placeholder = "Digite o nome da sua cidade...",
     required = false,
+    valorInicial = "",
     onSelecionar,
 }) {
-    const [termo, setTermo] = useState("")
+    const [termo, setTermo] = useState(valorInicial)
     const [opcoes, setOpcoes] = useState([])
     const [aberto, setAberto] = useState(false)
     const [carregando, setCarregando] = useState(false)
