@@ -133,3 +133,109 @@
   .detalhe-cabecalho h1 { font-size: 18px; }
   .detalhe-vagas { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
 }
+
+/* ação de estacionar/sair */
+.detalhe-aviso--sucesso {
+  background: #E8F7F0;
+  color: #1F7A57;
+  border: 1px solid #C3E9D8;
+}
+
+.detalhe-ocupacao-ativa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: #FFF3E0;
+  border: 1px solid #F5DFB8;
+  color: #B5690A;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.detalhe-botao-sair {
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+  background: #B5690A;
+  cursor: pointer;
+}
+.detalhe-botao-sair:disabled { opacity: .6; cursor: not-allowed; }
+
+.detalhe-confirmar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--white);
+  border: 1px solid #EAEDEF;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-1);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  color: var(--ink-900);
+}
+
+.detalhe-confirmar-select {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #D7DBE0;
+  font-size: 13px;
+  color: var(--ink-900);
+  background: var(--white);
+}
+
+.detalhe-confirmar-acoes {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.detalhe-botao-confirmar {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+  background: var(--sky-500);
+  cursor: pointer;
+}
+.detalhe-botao-confirmar:disabled { opacity: .6; cursor: not-allowed; }
+
+.detalhe-botao-cancelar {
+  border: 1px solid #D7DBE0;
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-700);
+  background: var(--white);
+  cursor: pointer;
+}
+
+/* vagas clicáveis */
+.detalhe-vaga {
+  cursor: default;
+  border: 1.5px solid transparent;
+  font-family: inherit;
+}
+.detalhe-vaga--clicavel {
+  cursor: pointer;
+  transition: transform .1s ease, border-color .1s ease;
+}
+.detalhe-vaga--clicavel:hover {
+  border-color: #1F7A57;
+  transform: translateY(-1px);
+}
+.detalhe-vaga:disabled {
+  cursor: not-allowed;
+}
