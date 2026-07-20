@@ -88,7 +88,7 @@ rotas.get('/codigo/:codigo', PisoController.buscarPisoPorCodigo)
  * @swagger
  * /pisos:
  *   get:
- *     summary: Lista todos os pisos
+ *     summary: Lista todos os pisos, com o nome do estacionamento ao qual cada um pertence
  *     tags: [Piso]
  *     security:
  *       - bearerAuth: []

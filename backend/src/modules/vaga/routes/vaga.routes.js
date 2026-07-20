@@ -25,6 +25,8 @@ const rotas = Router()
  *                 type: string
  *               is_ocupada:
  *                 type: boolean
+ *               em_manutencao:
+ *                 type: boolean
  *               piso_id:
  *                 type: string
  *                 format: uuid
@@ -40,7 +42,7 @@ rotas.post('/', VagaController.cadastrarVaga)
  * @swagger
  * /vagas:
  *   get:
- *     summary: Lista todas as vagas
+ *     summary: Lista todas as vagas, com o nome e código do piso ao qual cada uma pertence
  *     tags: [Vaga]
  *     security:
  *       - bearerAuth: []
@@ -92,6 +94,32 @@ rotas.get('/piso/:piso_id', VagaController.buscarVagaPorPisoId)
 
 /**
  * @swagger
+ * /vagas/estacionamento/{estacionamento_id}:
+ *   get:
+ *     summary: Lista as vagas de um estacionamento, com o nome e o andar do piso de cada uma
+ *     description: Usado pelo hub do motorista para exibir as vagas de um estacionamento.
+ *     tags: [Vaga]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: estacionamento_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Vagas encontradas para o estacionamento.
+ *       400:
+ *         description: Estacionamento não encontrado.
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+rotas.get('/estacionamento/:estacionamento_id', VagaController.buscarVagasPorEstacionamentoId)
+
+/**
+ * @swagger
  * /vagas/{id}:
  *   get:
  *     summary: Busca vaga pelo ID
@@ -113,5 +141,46 @@ rotas.get('/piso/:piso_id', VagaController.buscarVagaPorPisoId)
  *         $ref: '#/components/responses/NotFound'
  */
 rotas.get('/:id', VagaController.buscarVagaPorId)
+
+/**
+ * @swagger
+ * /vagas/{id}:
+ *   put:
+ *     summary: Edita uma vaga
+ *     tags: [Vaga]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               codigo:
+ *                 type: string
+ *               nome:
+ *                 type: string
+ *               is_ocupada:
+ *                 type: boolean
+ *               em_manutencao:
+ *                 type: boolean
+ *               piso_id:
+ *                 type: string
+ *                 format: uuid
+ *     responses:
+ *       200:
+ *         description: Vaga editada.
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+rotas.put('/:id', VagaController.editarVaga)
 
 module.exports = rotas

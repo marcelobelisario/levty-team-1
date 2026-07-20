@@ -8,15 +8,51 @@ class VagaRepository {
   }
 
   async listarVagas() {
-    return db("vaga").select("*");
+    return db("vaga")
+      .join("piso", "piso.id", "vaga.piso_id")
+      .select(
+        "vaga.id",
+        "vaga.codigo",
+        "vaga.nome",
+        "vaga.is_ocupada",
+        "vaga.em_manutencao",
+        "vaga.piso_id",
+        "piso.nome as piso_nome",
+        "vaga.criado_em",
+        "vaga.atualizado_em"
+      )
+      .orderBy("piso.nome")
+      .orderBy("vaga.nome");
   }
 
   async buscarVagaPorId(id) {
     return db("vaga").where({ id }).first();
   }
 
+  async buscarVagaPorCodigo(codigo) {
+    return db("vaga").where({ codigo }).first();
+  }
+
   async buscarVagaPorPisoId(pisoId) {
     return db("vaga").where({ pisoId: pisoId }).select("*");
+  }
+
+  async buscarVagasPorEstacionamentoId(estacionamentoId) {
+    return db("vaga")
+      .join("piso", "piso.id", "vaga.piso_id")
+      .where("piso.estacionamento_id", estacionamentoId)
+      .select(
+        "vaga.id",
+        "vaga.codigo",
+        "vaga.nome",
+        "vaga.is_ocupada",
+        "vaga.em_manutencao",
+        "vaga.piso_id",
+        "piso.nome as piso_nome",
+        "piso.andar as piso_andar"
+      )
+      .orderBy("piso.andar")
+      .orderBy("vaga.nome");
   }
 
   async buscarVagasDesocupadas() {

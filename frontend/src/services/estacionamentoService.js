@@ -8,6 +8,10 @@ async function listarTodos() {
     return await api.get('/estacionamentos')
 }
 
+async function listarComDisponibilidade() {
+    return await api.get('/estacionamentos/disponibilidade')
+}
+
 async function buscarPorId(id) {
     return await api.get(`/estacionamentos/id/${id}`)
 }
@@ -27,6 +31,7 @@ async function excluir(id) {
 export default {
     cadastrar,
     listarTodos,
+    listarComDisponibilidade,
     buscarPorId,
     buscarPorCnpj,
     editar,
