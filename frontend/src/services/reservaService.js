@@ -12,6 +12,10 @@ async function listarTodasOcupacoes() {
     return await api.get('/veiculo-vaga')
 }
 
+async function listarMovimentacoesPorEstacionamento(estacionamentoId) {
+    return await api.get(`/veiculo-vaga/estacionamento/${estacionamentoId}`)
+}
+
 async function buscarOcupacaoPorId(id) {
     return await api.get(`/veiculo-vaga/${id}`)
 }
@@ -33,6 +37,7 @@ export default {
     estacionarVeiculo,
     registrarSaida,
     listarTodasOcupacoes,
+    listarMovimentacoesPorEstacionamento,
     buscarOcupacaoPorId,
     listarHistoricoPorVeiculo,
     listarHistoricoPorVaga,

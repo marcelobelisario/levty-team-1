@@ -119,6 +119,30 @@ rotas.get('/vaga/:vaga_id', VeiculoVagaController.listarHistoricoPorVaga)
 
 /**
  * @swagger
+ * /veiculo-vaga/estacionamento/{estacionamento_id}:
+ *   get:
+ *     summary: Lista as movimentações recentes de um estacionamento
+ *     description: Usado pelo dashboard do gerente. Junta veículo, vaga e piso, ordenado pela entrada mais recente.
+ *     tags: [VeículoVaga]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: estacionamento_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Movimentações recentes do estacionamento.
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+rotas.get('/estacionamento/:estacionamento_id', VeiculoVagaController.listarMovimentacoesPorEstacionamento)
+
+/**
+ * @swagger
  * /veiculo-vaga/{id}:
  *   get:
  *     summary: Busca ocupação pelo ID
