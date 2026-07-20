@@ -6,6 +6,7 @@ const TITULOS = {
   '/admin/dashboard': { eyebrow: 'Visão geral', titulo: 'Dashboard' },
   '/admin/estacionamento': { eyebrow: 'Cadastros', titulo: 'Estacionamento' },
   '/admin/pisos': { eyebrow: 'Cadastros', titulo: 'Pisos' },
+  '/admin/vagas': { eyebrow: 'Operação', titulo: 'Vagas' },
 };
 
 const TITULO_PADRAO = { eyebrow: 'Visão geral', titulo: 'Dashboard' };
@@ -55,10 +56,13 @@ export default function AdminLayout({ children }) {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
           <span>Turnos</span>
         </button>
-        <button className="nav-item" data-screen="vagas">
+        <NavLink
+          to="/admin/vagas"
+          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/><rect x="14" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/></svg>
           <span>Vagas</span>
-        </button>
+        </NavLink>
         <button className="nav-item" data-screen="veiculos">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 16V11l2-5h12l2 5v5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M2 16h20v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-3Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><circle cx="7" cy="16" r="1.4" fill="currentColor"/><circle cx="17" cy="16" r="1.4" fill="currentColor"/></svg>
           <span>Veículos</span>
