@@ -14,6 +14,10 @@ class EstacionamentoService {
         return await EstacionamentoRepository.listarTodosEstacionamentos()
     }
 
+    async listarEstacionamentosComDisponibilidade(){
+        return await EstacionamentoRepository.listarEstacionamentosComDisponibilidade()
+    }
+
     async buscarEstacionamentoPorId(id){
         const estacionamentoExistente = await EstacionamentoRepository.buscarEstacionamentoPorId(id)
 

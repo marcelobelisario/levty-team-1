@@ -7,6 +7,9 @@ import Painel from "../pages/painel"
 import PrivateRoute from "./PrivateRoute"
 
 import AdminLayout from "../layouts/AdminLayout"
+import MotoristaLayout from "../layouts/MotoristaLayout"
+import Hub from "../pages/motorista/Hub"
+import EstacionamentoVagas from "../pages/motorista/EstacionamentoVagas"
 import Dashboard from "../pages/administrador/Dashboard"
 import Estacionamento from "../pages/administrador/Estacionamento"
 import EditarEstacionamento from "../pages/administrador/EditarEstacionamento"
@@ -28,6 +31,28 @@ export default function AppRoutes() {
                 element={
                     <PrivateRoute>
                         <Painel />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/motorista"
+                element={
+                    <PrivateRoute>
+                        <MotoristaLayout>
+                            <Hub />
+                        </MotoristaLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/motorista/estacionamentos/:id"
+                element={
+                    <PrivateRoute>
+                        <MotoristaLayout>
+                            <EstacionamentoVagas />
+                        </MotoristaLayout>
                     </PrivateRoute>
                 }
             />

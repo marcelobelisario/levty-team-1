@@ -68,6 +68,23 @@ rotas.get("/", EstacionamentoController.listarEstacionamentos)
 
 /**
  * @swagger
+ * /estacionamentos/disponibilidade:
+ *   get:
+ *     summary: Lista os estacionamentos ativos com o total de vagas e quantas estão livres
+ *     description: Usado pelo hub do motorista para exibir a disponibilidade de cada estacionamento.
+ *     tags: [Estacionamento]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Estacionamentos ativos com a disponibilidade de vagas.
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+rotas.get("/disponibilidade", EstacionamentoController.listarEstacionamentosComDisponibilidade)
+
+/**
+ * @swagger
  * /estacionamentos/cnpj/{cnpj}:
  *   get:
  *     summary: Busca estacionamento pelo CNPJ

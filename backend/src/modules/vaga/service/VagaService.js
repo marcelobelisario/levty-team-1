@@ -1,5 +1,6 @@
 const VagaRepository = require('../repository/VagaRepository')
 const PisoRepository = require('../../piso/repository/PisoRepository')
+const EstacionamentoRepository = require('../../estacionamento/repository/EstacionamentoRepository')
 
 class VagaService {
     async cadastrarVaga(dados){
@@ -22,6 +23,16 @@ class VagaService {
         }
 
         return await VagaRepository.buscarVagaPorPisoId(pisoId)
+    }
+
+    async buscarVagasPorEstacionamentoId(estacionamentoId){
+        const estacionamentoExistente = await EstacionamentoRepository.buscarEstacionamentoPorId(estacionamentoId)
+
+        if(!estacionamentoExistente) {
+            throw new Error("Ops! Parece que esse estacionamento não existe")
+        }
+
+        return await VagaRepository.buscarVagasPorEstacionamentoId(estacionamentoId)
     }
 
     async buscarVagasDesocupadas(){
