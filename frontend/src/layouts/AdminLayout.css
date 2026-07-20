@@ -97,3 +97,9 @@
   }
   .sidebar-foot { justify-content: center; }
 }
+
+@media (max-width: 720px) {
+  .topbar { padding: 0 16px; }
+  .topbar .search-box { display: none; }
+  .content { padding: 18px 16px 48px; }
+}
