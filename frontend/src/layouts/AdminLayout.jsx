@@ -1,9 +1,19 @@
-import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import './AdminLayout.css';
 import { useAuth } from '../context/AuthContext';
 
+const TITULOS = {
+  '/admin/dashboard': { eyebrow: 'Visão geral', titulo: 'Dashboard' },
+  '/admin/pisos': { eyebrow: 'Cadastros', titulo: 'Pisos' },
+};
+
+const TITULO_PADRAO = { eyebrow: 'Visão geral', titulo: 'Dashboard' };
+
 export default function AdminLayout({ children }) {
   const { usuario, logout } = useAuth();
+  const { pathname } = useLocation();
+
+  const { eyebrow, titulo } = TITULOS[pathname] || TITULO_PADRAO;
 
   return (
     <div className="app">
@@ -11,10 +21,13 @@ export default function AdminLayout({ children }) {
         <div className="brand-mark"><span className="dot"></span> <span>HubParking</span></div>
 
         <div className="nav-group-label">Visão geral</div>
-        <button className="nav-item active" data-screen="dashboard">
+        <NavLink
+          to="/admin/dashboard"
+          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 13h8V3H3v10Zm10 8h8V11h-8v10ZM3 21h8v-6H3v6ZM13 3v6h8V3h-8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
           <span>Dashboard</span>
-        </button>
+        </NavLink>
 
         <div className="nav-group-label">Cadastros</div>
         <button className="nav-item" data-screen="estacionamento">
@@ -25,10 +38,13 @@ export default function AdminLayout({ children }) {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.8"/><path d="M3.5 20c.6-3.4 3-5.4 5.5-5.4s4.9 2 5.5 5.4M15.5 8.3a3 3 0 1 1 3.6 2.95M20.5 20c-.4-2.3-1.6-4-3.4-4.9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
           <span>Pessoas</span>
         </button>
-        <button className="nav-item" data-screen="pisos">
+        <NavLink
+          to="/admin/pisos"
+          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 8h18M3 14h18M6 4h12v16H6V4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
           <span>Pisos</span>
-        </button>
+        </NavLink>
 
         <div className="nav-group-label">Operação</div>
         <button className="nav-item" data-screen="turnos">
@@ -59,8 +75,8 @@ export default function AdminLayout({ children }) {
       <div className="main">
         <div className="topbar">
           <div className="title-block">
-            <div className="eyebrow" id="topbar-eyebrow">Visão geral</div>
-            <h1 id="topbar-title">Dashboard</h1>
+            <div className="eyebrow" id="topbar-eyebrow">{eyebrow}</div>
+            <h1 id="topbar-title">{titulo}</h1>
           </div>
           <div className="topbar-actions">
             <div className="search-box">
