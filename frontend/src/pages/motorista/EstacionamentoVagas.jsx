@@ -5,6 +5,9 @@ import "./EstacionamentoVagas.css"
 
 import estacionamentoService from "../../services/estacionamentoService"
 import vagaService from "../../services/vagaService"
+import veiculoService from "../../services/veiculoService"
+import reservaService from "../../services/reservaService"
+import { useAuth } from "../../context/AuthContext"
 
 function situacaoDaVaga(vaga) {
     if (vaga.em_manutencao) {
@@ -20,31 +23,58 @@ function situacaoDaVaga(vaga) {
 
 export default function EstacionamentoVagas() {
     const { id } = useParams()
+    const { usuario } = useAuth()
 
     const [estacionamento, setEstacionamento] = useState(null)
     const [vagas, setVagas] = useState([])
     const [carregando, setCarregando] = useState(true)
     const [erro, setErro] = useState("")
 
+    const [meusVeiculos, setMeusVeiculos] = useState([])
+    const [ocupacaoAtiva, setOcupacaoAtiva] = useState(null)
+
+    const [vagaSelecionada, setVagaSelecionada] = useState(null)
+    const [veiculoParaEstacionar, setVeiculoParaEstacionar] = useState("")
+    const [carregandoAcao, setCarregandoAcao] = useState(false)
+    const [erroAcao, setErroAcao] = useState("")
+    const [sucessoAcao, setSucessoAcao] = useState("")
+
     useEffect(() => {
-        async function carregar() {
-            try {
-                const [dadosEstacionamento, dadosVagas] = await Promise.all([
-                    estacionamentoService.buscarPorId(id),
-                    vagaService.buscarVagasPorEstacionamentoId(id),
-                ])
-
-                setEstacionamento(dadosEstacionamento)
-                setVagas(dadosVagas || [])
-            } catch (error) {
-                setErro(error.message)
-            } finally {
-                setCarregando(false)
-            }
-        }
-
         carregar()
     }, [id])
+
+    async function carregar() {
+        setCarregando(true)
+        setErro("")
+
+        try {
+            const [dadosEstacionamento, dadosVagas, dadosVeiculos] = await Promise.all([
+                estacionamentoService.buscarPorId(id),
+                vagaService.buscarVagasPorEstacionamentoId(id),
+                veiculoService.listarTodosVeiculos(),
+            ])
+
+            setEstacionamento(dadosEstacionamento)
+            setVagas(dadosVagas || [])
+
+            const veiculosDoMotorista = (dadosVeiculos || []).filter(
+                (veiculo) => veiculo.pessoa_id === usuario.id
+            )
+            setMeusVeiculos(veiculosDoMotorista)
+
+            const ocupacoesAtivas = await Promise.all(
+                veiculosDoMotorista.map((veiculo) =>
+                    reservaService.buscarOcupacaoAtivaPorVeiculo(veiculo.id)
+                )
+            )
+            const ativa = ocupacoesAtivas.find((ocupacao) => ocupacao !== null)
+            setOcupacaoAtiva(ativa || null)
+        } catch (error) {
+            setErro(error.message)
+        } finally {
+            setCarregando(false)
+        }
+    }
 
     const vagasLivres = useMemo(
         () => vagas.filter((vaga) => !vaga.is_ocupada && !vaga.em_manutencao).length,
@@ -70,6 +100,62 @@ export default function EstacionamentoVagas() {
         return Array.from(agrupados.values())
     }, [vagas])
 
+    function abrirSelecaoDeVeiculo(vaga) {
+        if (ocupacaoAtiva || meusVeiculos.length === 0) {
+            return
+        }
+
+        setErroAcao("")
+        setSucessoAcao("")
+        setVagaSelecionada(vaga)
+        setVeiculoParaEstacionar(meusVeiculos[0]?.id || "")
+    }
+
+    function cancelarSelecao() {
+        setVagaSelecionada(null)
+        setVeiculoParaEstacionar("")
+        setErroAcao("")
+    }
+
+    async function confirmarEstacionar() {
+        if (!veiculoParaEstacionar || !vagaSelecionada) {
+            return
+        }
+
+        setCarregandoAcao(true)
+        setErroAcao("")
+
+        try {
+            await reservaService.estacionarVeiculo(veiculoParaEstacionar, vagaSelecionada.id)
+            setSucessoAcao(`Estacionado na vaga ${vagaSelecionada.nome}!`)
+            setVagaSelecionada(null)
+            setVeiculoParaEstacionar("")
+            await carregar()
+        } catch (error) {
+            setErroAcao(error.message)
+        } finally {
+            setCarregandoAcao(false)
+        }
+    }
+
+    async function registrarSaida() {
+        if (!ocupacaoAtiva) {
+            return
+        }
+
+        setCarregandoAcao(true)
+        setErroAcao("")
+
+        try {
+            await reservaService.registrarSaida(ocupacaoAtiva.id)
+            setSucessoAcao("Saída registrada com sucesso!")
+            await carregar()
+        } catch (error) {
+            setErroAcao(error.message)
+        } finally {
+            setCarregandoAcao(false)
+        }
+    }
     return (
         <section className="detalhe">
 
@@ -101,8 +187,74 @@ export default function EstacionamentoVagas() {
                                 <br />
                                 de {vagas.length}
                             </span>
-                        </div>
+                            </div>
                     </div>
+
+                    {meusVeiculos.length === 0 && (
+                        <div className="detalhe-aviso detalhe-aviso--erro">
+                            Você não possui veículos cadastrados. Cadastre um veículo antes de estacionar.
+                        </div>
+                    )}
+
+                    {ocupacaoAtiva && (
+                        <div className="detalhe-ocupacao-ativa">
+                            <span>
+                                Você já tem um veículo estacionado desde{" "}
+                                {new Date(ocupacaoAtiva.estacionado_em).toLocaleString("pt-BR")}.
+                                Registre a saída antes de estacionar em outra vaga.
+                            </span>
+                            <button
+                                type="button"
+                                className="detalhe-botao-sair"
+                                onClick={registrarSaida}
+                                disabled={carregandoAcao}
+                            >
+                                {carregandoAcao ? "Registrando..." : "Registrar saída"}
+                            </button>
+                        </div>
+                    )}
+
+                    {sucessoAcao && <div className="detalhe-aviso detalhe-aviso--sucesso">{sucessoAcao}</div>}
+                    {erroAcao && <div className="detalhe-aviso detalhe-aviso--erro">{erroAcao}</div>}
+
+                    {vagaSelecionada && (
+                        <div className="detalhe-confirmar">
+                            <span>
+                                Estacionar na vaga <strong>{vagaSelecionada.nome}</strong> com qual veículo?
+                            </span>
+
+                            <select
+                                className="detalhe-confirmar-select"
+                                value={veiculoParaEstacionar}
+                                onChange={(e) => setVeiculoParaEstacionar(e.target.value)}
+                            >
+                                {meusVeiculos.map((veiculo) => (
+                                    <option key={veiculo.id} value={veiculo.id}>
+                                        {veiculo.placa} — {veiculo.marca} {veiculo.modelo}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <div className="detalhe-confirmar-acoes">
+                                <button
+                                    type="button"
+                                    className="detalhe-botao-confirmar"
+                                    onClick={confirmarEstacionar}
+                                    disabled={carregandoAcao}
+                                >
+                                    {carregandoAcao ? "Estacionando..." : "Confirmar"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="detalhe-botao-cancelar"
+                                    onClick={cancelarSelecao}
+                                    disabled={carregandoAcao}
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="detalhe-legenda">
                         <span><i className="detalhe-ponto detalhe-ponto--livre" /> Livre</span>
@@ -130,14 +282,20 @@ export default function EstacionamentoVagas() {
                                 {piso.vagas.map((vaga) => {
                                     const situacao = situacaoDaVaga(vaga)
 
+                                    const clicavel = situacao.modificador === "livre" && !ocupacaoAtiva && meusVeiculos.length > 0
+
                                     return (
-                                        <li
-                                            key={vaga.id}
-                                            className={`detalhe-vaga detalhe-vaga--${situacao.modificador}`}
-                                        >
-                                            <span className="detalhe-vaga-nome">{vaga.nome}</span>
-                                            <span className="detalhe-vaga-codigo">{vaga.codigo}</span>
-                                            <span className="detalhe-vaga-situacao">{situacao.rotulo}</span>
+                                        <li key={vaga.id}>
+                                            <button
+                                                type="button"
+                                                className={`detalhe-vaga detalhe-vaga--${situacao.modificador}${clicavel ? " detalhe-vaga--clicavel" : ""}`}
+                                                onClick={() => clicavel && abrirSelecaoDeVeiculo(vaga)}
+                                                disabled={!clicavel}
+                                            >
+                                                <span className="detalhe-vaga-nome">{vaga.nome}</span>
+                                                <span className="detalhe-vaga-codigo">{vaga.codigo}</span>
+                                                <span className="detalhe-vaga-situacao">{situacao.rotulo}</span>
+                                            </button>
                                         </li>
                                     )
                                 })}
