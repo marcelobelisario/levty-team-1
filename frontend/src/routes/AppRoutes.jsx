@@ -7,8 +7,18 @@ import Painel from "../pages/painel"
 import PrivateRoute from "./PrivateRoute"
 
 import AdminLayout from "../layouts/AdminLayout"
+import MotoristaLayout from "../layouts/MotoristaLayout"
+import Hub from "../pages/motorista/Hub"
+import EstacionamentoVagas from "../pages/motorista/EstacionamentoVagas"
 import Dashboard from "../pages/administrador/Dashboard"
 import Veiculos from "../pages/administrador/Veiculos"
+import Estacionamento from "../pages/administrador/Estacionamento"
+import EditarEstacionamento from "../pages/administrador/EditarEstacionamento"
+import Pisos from "../pages/administrador/Pisos"
+import Turnos from "../pages/administrador/Turnos"
+import EditarPiso from "../pages/administrador/EditarPiso"
+import Vagas from "../pages/administrador/Vagas"
+import EditarVaga from "../pages/administrador/EditarVaga"
 
 export default function AppRoutes() {
     return (
@@ -23,6 +33,28 @@ export default function AppRoutes() {
                 element={
                     <PrivateRoute>
                         <Painel />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/motorista"
+                element={
+                    <PrivateRoute>
+                        <MotoristaLayout>
+                            <Hub />
+                        </MotoristaLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/motorista/estacionamentos/:id"
+                element={
+                    <PrivateRoute>
+                        <MotoristaLayout>
+                            <EstacionamentoVagas />
+                        </MotoristaLayout>
                     </PrivateRoute>
                 }
             />
@@ -44,6 +76,82 @@ export default function AppRoutes() {
                     <PrivateRoute>
                         <AdminLayout>
                             <Veiculos />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/admin/estacionamento"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <Estacionamento />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/admin/estacionamento/:id/editar"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <EditarEstacionamento />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/admin/pisos"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <Pisos />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/admin/turnos"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <Turnos />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/admin/pisos/:id/editar"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <EditarPiso />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/admin/vagas"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <Vagas />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/admin/vagas/:id/editar"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <EditarVaga />
                         </AdminLayout>
                     </PrivateRoute>
                 }

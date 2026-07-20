@@ -1,10 +1,39 @@
-import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import './AdminLayout.css';
 import { useAuth } from '../context/AuthContext';
 import { NavLink } from 'react-router-dom';
 
+const TITULOS = {
+  '/admin/dashboard': { eyebrow: 'Visão geral', titulo: 'Dashboard' },
+  '/admin/estacionamento': { eyebrow: 'Cadastros', titulo: 'Estacionamento' },
+  '/admin/pisos': { eyebrow: 'Cadastros', titulo: 'Pisos' },'/admin/turnos': { eyebrow: 'Operação', titulo: 'Turnos' },
+  '/admin/pisos': { eyebrow: 'Cadastros', titulo: 'Pisos' },
+  '/admin/vagas': { eyebrow: 'Operação', titulo: 'Vagas' },
+};
+
+const TITULO_PADRAO = { eyebrow: 'Visão geral', titulo: 'Dashboard' };
+
+function obterTitulo(pathname) {
+  if (/^\/admin\/vagas\/.+\/editar$/.test(pathname)) {
+    return { eyebrow: 'Operação', titulo: 'Editar vaga' };
+  }
+
+  if (/^\/admin\/pisos\/.+\/editar$/.test(pathname)) {
+    return { eyebrow: 'Cadastros', titulo: 'Editar piso' };
+  }
+
+  if (/^\/admin\/estacionamento\/.+\/editar$/.test(pathname)) {
+    return { eyebrow: 'Cadastros', titulo: 'Editar estacionamento' };
+  }
+
+  return TITULOS[pathname] || TITULO_PADRAO;
+}
+
 export default function AdminLayout({ children }) {
   const { usuario, logout } = useAuth();
+  const { pathname } = useLocation();
+
+  const { eyebrow, titulo } = obterTitulo(pathname);
 
   return (
     <div className="app">
@@ -15,31 +44,58 @@ export default function AdminLayout({ children }) {
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 13h8V3H3v10Zm10 8h8V11h-8v10ZM3 21h8v-6H3v6ZM13 3v6h8V3h-8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
   <span>Dashboard</span>
 </NavLink>
+        <div className="nav-group-label">Visão geral</div>
+        <NavLink
+          to="/admin/dashboard"
+          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 13h8V3H3v10Zm10 8h8V11h-8v10ZM3 21h8v-6H3v6ZM13 3v6h8V3h-8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
+          <span>Dashboard</span>
+        </NavLink>
 
         <div className="nav-group-label">Cadastros</div>
-        <button className="nav-item" data-screen="estacionamento">
+        <NavLink
+          to="/admin/estacionamento"
+          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 21V7l8-4 8 4v14M9 21v-6h6v6" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
           <span>Estacionamento</span>
-        </button>
+        </NavLink>
         <button className="nav-item" data-screen="pessoas">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.8"/><path d="M3.5 20c.6-3.4 3-5.4 5.5-5.4s4.9 2 5.5 5.4M15.5 8.3a3 3 0 1 1 3.6 2.95M20.5 20c-.4-2.3-1.6-4-3.4-4.9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
           <span>Pessoas</span>
         </button>
-        <button className="nav-item" data-screen="pisos">
+        <NavLink
+          to="/admin/pisos"
+          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 8h18M3 14h18M6 4h12v16H6V4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
           <span>Pisos</span>
-        </button>
+        </NavLink>
 
         <div className="nav-group-label">Operação</div>
+<NavLink
+  to="/admin/turnos"
+  className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+  <span>Turnos</span>
+</NavLink>
+        <button className="nav-item" data-screen="vagas">
         <button className="nav-item" data-screen="turnos">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
           <span>Turnos</span>
         </button>
-        <button className="nav-item" data-screen="vagas">
+        <NavLink
+          to="/admin/vagas"
+          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/><rect x="14" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/></svg>
           <span>Vagas</span>
         </button>
       <NavLink to="/admin/veiculos" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+        </NavLink>
+        <button className="nav-item" data-screen="veiculos">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 16V11l2-5h12l2 5v5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M2 16h20v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-3Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><circle cx="7" cy="16" r="1.4" fill="currentColor"/><circle cx="17" cy="16" r="1.4" fill="currentColor"/></svg>
           <span>Veículos</span>
         </NavLink>
@@ -59,8 +115,8 @@ export default function AdminLayout({ children }) {
       <div className="main">
         <div className="topbar">
           <div className="title-block">
-            <div className="eyebrow" id="topbar-eyebrow">Visão geral</div>
-            <h1 id="topbar-title">Dashboard</h1>
+            <div className="eyebrow" id="topbar-eyebrow">{eyebrow}</div>
+            <h1 id="topbar-title">{titulo}</h1>
           </div>
           <div className="topbar-actions">
             <div className="search-box">

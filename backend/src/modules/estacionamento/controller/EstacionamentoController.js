@@ -25,6 +25,18 @@ class EstacionamentoController {
         }
     }
 
+    async listarEstacionamentosComDisponibilidade(req, res){
+        try {
+            const estacionamentos = await EstacionamentoService.listarEstacionamentosComDisponibilidade()
+
+            return res.status(200).json(estacionamentos)
+        } catch (error) {
+            return res.status(500).json({
+                erro: error.message
+            })
+        }
+    }
+
     async buscarEstacionamentoPorCnpj(req, res){
         try {
             const estacionamento = await EstacionamentoService.buscarEstacionamentoPorCnpj(

@@ -11,7 +11,20 @@ class PisoRepository{
 
     async listarTodosPisos() {
         return await db("piso")
-            .select('*')
+            .join("estacionamento", "estacionamento.id", "piso.estacionamento_id")
+            .select(
+                "piso.id",
+                "piso.codigo",
+                "piso.nome",
+                "piso.andar",
+                "piso.vagas",
+                "piso.estacionamento_id",
+                "estacionamento.nome as estacionamento_nome",
+                "piso.criado_em",
+                "piso.atualizado_em"
+            )
+            .orderBy("estacionamento.nome")
+            .orderBy("piso.andar")
     }
 
     async buscarPisoPorId(id){

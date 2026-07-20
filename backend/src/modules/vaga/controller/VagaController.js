@@ -53,11 +53,40 @@ class VagaController {
         }
     }
 
+    async buscarVagasPorEstacionamentoId(req, res){
+        try {
+            const vagas = await VagaService.buscarVagasPorEstacionamentoId(
+                req.params.estacionamento_id
+            )
+
+            return res.status(200).json(vagas)
+        } catch (error) {
+            return res.status(400).json({
+                erro: error.message
+            })
+        }
+    }
+
     async buscarVagasDesocupadas(req, res){
         try {
             const vagas = await VagaService.buscarVagasDesocupadas()
 
             return res.status(200).json(vagas)
+        } catch (error) {
+            return res.status(400).json({
+                erro: error.message
+            })
+        }
+    }
+
+    async editarVaga(req, res){
+        try {
+            const vaga = await VagaService.editarVaga(
+                req.params.id,
+                req.body
+            )
+
+            return res.status(200).json(vaga)
         } catch (error) {
             return res.status(400).json({
                 erro: error.message

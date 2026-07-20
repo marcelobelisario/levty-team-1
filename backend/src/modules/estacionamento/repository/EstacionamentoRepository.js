@@ -11,7 +11,46 @@ class EstacionamentoRepository {
 
     async listarTodosEstacionamentos() {
         return await db('estacionamento')
-            .select('*')
+            .join('cidade', 'cidade.id', 'estacionamento.cidade_id')
+            .select(
+                'estacionamento.id',
+                'estacionamento.nome',
+                'estacionamento.cnpj',
+                'estacionamento.logradouro',
+                'estacionamento.bairro',
+                'estacionamento.numero',
+                'estacionamento.email',
+                'estacionamento.telefone',
+                'estacionamento.ativo',
+                'estacionamento.cidade_id',
+                'cidade.nome as cidade_nome',
+                'cidade.uf as cidade_uf',
+                'estacionamento.criado_em',
+                'estacionamento.atualizado_em'
+            )
+            .orderBy('estacionamento.nome')
+    }
+
+    async listarEstacionamentosComDisponibilidade() {
+        return await db('estacionamento')
+            .join('cidade', 'cidade.id', 'estacionamento.cidade_id')
+            .leftJoin('piso', 'piso.estacionamento_id', 'estacionamento.id')
+            .leftJoin('vaga', 'vaga.piso_id', 'piso.id')
+            .where('estacionamento.ativo', true)
+            .groupBy('estacionamento.id', 'cidade.nome', 'cidade.uf')
+            .select(
+                'estacionamento.id',
+                'estacionamento.nome',
+                'estacionamento.logradouro',
+                'estacionamento.bairro',
+                'estacionamento.numero',
+                'estacionamento.telefone',
+                'cidade.nome as cidade_nome',
+                'cidade.uf as cidade_uf',
+                db.raw('COUNT(vaga.id)::int as total_vagas'),
+                db.raw('COUNT(vaga.id) FILTER (WHERE vaga.is_ocupada = false AND vaga.em_manutencao = false)::int as vagas_livres')
+            )
+            .orderBy('estacionamento.nome')
     }
 
     async buscarEstacionamentoPorCnpj(cnpj){
@@ -22,7 +61,13 @@ class EstacionamentoRepository {
 
     async buscarEstacionamentoPorId(id){
         return await db('estacionamento')
-            .where({ id })
+            .join('cidade', 'cidade.id', 'estacionamento.cidade_id')
+            .select(
+                'estacionamento.*',
+                'cidade.nome as cidade_nome',
+                'cidade.uf as cidade_uf'
+            )
+            .where({ 'estacionamento.id': id })
             .first()
     }
 
