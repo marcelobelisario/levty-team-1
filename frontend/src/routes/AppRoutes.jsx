@@ -8,6 +8,7 @@ import PrivateRoute from "./PrivateRoute"
 
 import AdminLayout from "../layouts/AdminLayout"
 import Dashboard from "../pages/administrador/Dashboard"
+import Veiculos from "../pages/administrador/Veiculos"
 
 export default function AppRoutes() {
     return (
@@ -32,6 +33,17 @@ export default function AppRoutes() {
                     <PrivateRoute>
                         <AdminLayout>
                             <Dashboard />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+            
+            <Route
+                path="/admin/veiculos"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <Veiculos />
                         </AdminLayout>
                     </PrivateRoute>
                 }
