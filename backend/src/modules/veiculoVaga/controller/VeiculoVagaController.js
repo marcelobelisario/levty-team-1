@@ -54,6 +54,20 @@ class VeiculoVagaController {
         }
     }
 
+    async listarMovimentacoesPorEstacionamento(req, res) {
+        try {
+            const { estacionamento_id } = req.params
+
+            const registros = await VeiculoVagaService.listarMovimentacoesPorEstacionamento(estacionamento_id)
+
+            return res.status(200).json(registros)
+        } catch (error) {
+            return res.status(400).json({
+                erro: error.message
+            })
+        }
+    }
+
     async listarHistoricoPorVeiculo(req, res) {
         try {
             const { veiculo_id } = req.params

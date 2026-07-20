@@ -59,6 +59,10 @@ class VeiculoVagaService {
         return await VeiculoVagaRepository.listarTodos()
     }
 
+    async listarMovimentacoesPorEstacionamento(estacionamentoId) {
+        return await VeiculoVagaRepository.listarMovimentacoesPorEstacionamentoId(estacionamentoId)
+    }
+
     async buscarPorId(id) {
         const registro = await VeiculoVagaRepository.buscarPorId(id)
 
