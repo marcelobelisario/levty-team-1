@@ -10,6 +10,7 @@ import AdminLayout from "../layouts/AdminLayout"
 import MotoristaLayout from "../layouts/MotoristaLayout"
 import Hub from "../pages/motorista/Hub"
 import EstacionamentoVagas from "../pages/motorista/EstacionamentoVagas"
+import MeusVeiculos from "../pages/motorista/MeusVeiculos"
 import Dashboard from "../pages/administrador/Dashboard"
 import Veiculos from "../pages/administrador/Veiculos"
 import Estacionamento from "../pages/administrador/Estacionamento"
@@ -54,6 +55,17 @@ export default function AppRoutes() {
                     <PrivateRoute>
                         <MotoristaLayout>
                             <EstacionamentoVagas />
+                        </MotoristaLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/motorista/veiculos"
+                element={
+                    <PrivateRoute>
+                        <MotoristaLayout>
+                            <MeusVeiculos />
                         </MotoristaLayout>
                     </PrivateRoute>
                 }
