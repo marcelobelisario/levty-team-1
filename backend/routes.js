@@ -9,6 +9,7 @@ const veiculoRoutes = require("./src/modules/veiculo/routes/veiculo.routes")
 const veiculoVagaRoutes = require("./src/modules/veiculoVaga/routes/veiculoVaga.routes")
 const autenticacaoRoutes = require("./src/modules/autenticacao/routes/autenticacao.routes")
 const cidadeRoutes = require("./src/modules/cidade/routes/cidade.routes")
+const reservaRoutes = require("./src/modules/reserva/routes/reserva.routes")
 
 const rotas = Router()
 
@@ -21,5 +22,6 @@ rotas.use('/veiculo', veiculoRoutes)
 rotas.use('/veiculo-vaga', veiculoVagaRoutes)
 rotas.use('/autenticacao', autenticacaoRoutes)
 rotas.use('/cidades', cidadeRoutes)
+rotas.use('/reservas', reservaRoutes)
 
 module.exports = rotas
