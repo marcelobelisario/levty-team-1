@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import './AdminLayout.css';
 import { useAuth } from '../context/AuthContext';
+import { NavLink } from 'react-router-dom';
 
 const TITULOS = {
   '/admin/dashboard': { eyebrow: 'Visão geral', titulo: 'Dashboard' },
@@ -39,6 +40,10 @@ export default function AdminLayout({ children }) {
       <aside className="sidebar">
         <div className="brand-mark"><span className="dot"></span> <span>HubParking</span></div>
 
+        <NavLink to="/admin/dashboard" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 13h8V3H3v10Zm10 8h8V11h-8v10ZM3 21h8v-6H3v6ZM13 3v6h8V3h-8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
+  <span>Dashboard</span>
+</NavLink>
         <div className="nav-group-label">Visão geral</div>
         <NavLink
           to="/admin/dashboard"
@@ -87,11 +92,13 @@ export default function AdminLayout({ children }) {
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/><rect x="14" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/></svg>
           <span>Vagas</span>
+        </button>
+      <NavLink to="/admin/veiculos" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
         </NavLink>
         <button className="nav-item" data-screen="veiculos">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 16V11l2-5h12l2 5v5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M2 16h20v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-3Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><circle cx="7" cy="16" r="1.4" fill="currentColor"/><circle cx="17" cy="16" r="1.4" fill="currentColor"/></svg>
           <span>Veículos</span>
-        </button>
+        </NavLink>
 
         <div className="sidebar-foot">
           <div className="avatar">{usuario?.nome ? usuario.nome.charAt(0).toUpperCase() : 'U'}</div>
