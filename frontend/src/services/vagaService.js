@@ -16,6 +16,10 @@ async function buscarVagaPorPisoId(pisoId) {
     return await api.get(`/vagas/piso/${pisoId}`)
 }
 
+async function buscarVagasPorEstacionamentoId(estacionamentoId) {
+    return await api.get(`/vagas/estacionamento/${estacionamentoId}`)
+}
+
 async function buscarVagasDesocupadas() {
     return await api.get('/vagas/desocupadas')
 }
@@ -29,6 +33,7 @@ export default {
     listarTodasVagas,
     buscarVagaPorId,
     buscarVagaPorPisoId,
+    buscarVagasPorEstacionamentoId,
     buscarVagasDesocupadas,
     editarVaga,
 }

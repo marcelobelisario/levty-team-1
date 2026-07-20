@@ -94,6 +94,32 @@ rotas.get('/piso/:piso_id', VagaController.buscarVagaPorPisoId)
 
 /**
  * @swagger
+ * /vagas/estacionamento/{estacionamento_id}:
+ *   get:
+ *     summary: Lista as vagas de um estacionamento, com o nome e o andar do piso de cada uma
+ *     description: Usado pelo hub do motorista para exibir as vagas de um estacionamento.
+ *     tags: [Vaga]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: estacionamento_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Vagas encontradas para o estacionamento.
+ *       400:
+ *         description: Estacionamento não encontrado.
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+rotas.get('/estacionamento/:estacionamento_id', VagaController.buscarVagasPorEstacionamentoId)
+
+/**
+ * @swagger
  * /vagas/{id}:
  *   get:
  *     summary: Busca vaga pelo ID

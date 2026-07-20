@@ -38,7 +38,7 @@ export default function Login() {
             if (pessoa.is_admin) {
                 navigate("/admin/dashboard")
             } else {
-                navigate("/painel")
+                navigate("/motorista")
             }
         } catch (error) {
             setErro(error.message)
