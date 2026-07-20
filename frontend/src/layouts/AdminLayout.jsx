@@ -1,7 +1,10 @@
 import React from 'react';
 import './AdminLayout.css';
+import { useAuth } from '../context/AuthContext';
 
 export default function AdminLayout({ children }) {
+  const { usuario, logout } = useAuth();
+
   return (
     <div className="app">
       <aside className="sidebar">
@@ -42,12 +45,12 @@ export default function AdminLayout({ children }) {
         </button>
 
         <div className="sidebar-foot">
-          <div className="avatar">M</div>
+          <div className="avatar">{usuario?.nome ? usuario.nome.charAt(0).toUpperCase() : 'U'}</div>
           <div>
-            <div className="who">Marcelo</div>
-            <div className="role">Operador · Turno dia</div>
+            <div className="who">{usuario?.nome || 'Usuário'}</div>
+            <div className="role">{usuario?.is_admin ? 'Administrador' : 'Operador'}</div>
           </div>
-          <button className="logout-btn" title="Sair">
+          <button className="logout-btn" title="Sair" onClick={logout}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M15 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4M10 17l5-5-5-5M15 12H3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
         </div>
