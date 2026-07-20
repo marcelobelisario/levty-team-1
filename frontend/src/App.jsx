@@ -1,12 +1,11 @@
-// import AppRoutes from "./routes/AppRoutes";
-import AdminLayout from "./layouts/AdminLayout";
-import Dashboard from "./pages/administrador/Dashboard";
+import AppRoutes from "./routes/AppRoutes"
+import { AuthProvider } from "./context/AuthContext"
 
 function App() {
   return (
-    <AdminLayout>
-      <Dashboard />
-    </AdminLayout>
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
   )
 }
 

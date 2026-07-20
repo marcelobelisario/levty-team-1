@@ -85,3 +85,15 @@
 .badge-dot { position: absolute; top: 6px; right: 7px; width: 7px; height: 7px; border-radius: 50%; background: var(--sky-400); border: 1.5px solid var(--white); }
 
 .content { flex: 1; overflow-y: auto; padding: 26px 28px 60px; }
+
+@media (max-width: 1024px) {
+  .sidebar { width: 72px; }
+  .sidebar .brand-mark span:not(.dot),
+  .sidebar .nav-item span,
+  .sidebar .who,
+  .sidebar .role,
+  .nav-group-label {
+    display: none;
+  }
+  .sidebar-foot { justify-content: center; }
+}

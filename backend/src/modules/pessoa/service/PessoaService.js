@@ -4,6 +4,13 @@ const bcrypt = require('bcrypt')
 class PessoaService {
 
     async cadastrarPessoa(dados) {
+        if (!dados.senha) {
+            throw new Error("A senha é obrigatória para o cadastro.")
+        }
+        if (!dados.nome || !dados.email || !dados.cpf) {
+            throw new Error("Nome, E-mail e CPF são obrigatórios.")
+        }
+
         const pessoaCpfExistente = await PessoaRepository.buscarPessoaPorCpf(dados.cpf)
         if (pessoaCpfExistente) {
             throw new Error("Ops! Parece que já existe uma pessoa cadastrada com esse CPF!")
@@ -14,11 +21,24 @@ class PessoaService {
             throw new Error("Ops! Parece que já existe uma pessoa cadastrada com esse E-mail!")
         }
 
-        if (dados.senha) {
-            dados.senha = await bcrypt.hash(dados.senha, 10)
+        const senhaHash = await bcrypt.hash(dados.senha, 10)
+
+        const novaPessoa = {
+            nome: dados.nome,
+            email: dados.email,
+            cpf: dados.cpf,
+            senha: senhaHash,
+            logradouro: dados.logradouro,
+            bairro: dados.bairro,
+            numero: dados.numero,
+            complemento: dados.complemento,
+            cidade_id: dados.cidade_id,
+            is_admin: false,
+            id_turno: null,
+            estacionamento_id: null
         }
 
-        return await PessoaRepository.cadastrarPessoa(dados)
+        return await PessoaRepository.cadastrarPessoa(novaPessoa)
     }
 
     async listarTodasPessoas() {

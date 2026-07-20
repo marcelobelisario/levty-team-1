@@ -1,53 +1,56 @@
 import React from 'react';
 import './AdminLayout.css';
+import { useAuth } from '../context/AuthContext';
 
 export default function AdminLayout({ children }) {
+  const { usuario, logout } = useAuth();
+
   return (
     <div className="app">
       <aside className="sidebar">
-        <div className="brand-mark"><span className="dot"></span> HubParking</div>
+        <div className="brand-mark"><span className="dot"></span> <span>HubParking</span></div>
 
         <div className="nav-group-label">Visão geral</div>
         <button className="nav-item active" data-screen="dashboard">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 13h8V3H3v10Zm10 8h8V11h-8v10ZM3 21h8v-6H3v6ZM13 3v6h8V3h-8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
-          Dashboard
+          <span>Dashboard</span>
         </button>
 
         <div className="nav-group-label">Cadastros</div>
         <button className="nav-item" data-screen="estacionamento">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 21V7l8-4 8 4v14M9 21v-6h6v6" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
-          Estacionamento
+          <span>Estacionamento</span>
         </button>
         <button className="nav-item" data-screen="pessoas">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.8"/><path d="M3.5 20c.6-3.4 3-5.4 5.5-5.4s4.9 2 5.5 5.4M15.5 8.3a3 3 0 1 1 3.6 2.95M20.5 20c-.4-2.3-1.6-4-3.4-4.9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-          Pessoas
+          <span>Pessoas</span>
         </button>
         <button className="nav-item" data-screen="pisos">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 8h18M3 14h18M6 4h12v16H6V4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
-          Pisos
+          <span>Pisos</span>
         </button>
 
         <div className="nav-group-label">Operação</div>
         <button className="nav-item" data-screen="turnos">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-          Turnos
+          <span>Turnos</span>
         </button>
         <button className="nav-item" data-screen="vagas">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/><rect x="14" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/></svg>
-          Vagas
+          <span>Vagas</span>
         </button>
         <button className="nav-item" data-screen="veiculos">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 16V11l2-5h12l2 5v5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M2 16h20v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-3Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><circle cx="7" cy="16" r="1.4" fill="currentColor"/><circle cx="17" cy="16" r="1.4" fill="currentColor"/></svg>
-          Veículos
+          <span>Veículos</span>
         </button>
 
         <div className="sidebar-foot">
-          <div className="avatar">M</div>
+          <div className="avatar">{usuario?.nome ? usuario.nome.charAt(0).toUpperCase() : 'U'}</div>
           <div>
-            <div className="who">Marcelo</div>
-            <div className="role">Operador · Turno dia</div>
+            <div className="who">{usuario?.nome || 'Usuário'}</div>
+            <div className="role">{usuario?.is_admin ? 'Administrador' : 'Operador'}</div>
           </div>
-          <button className="logout-btn" title="Sair">
+          <button className="logout-btn" title="Sair" onClick={logout}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M15 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4M10 17l5-5-5-5M15 12H3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
         </div>
@@ -69,7 +72,7 @@ export default function AdminLayout({ children }) {
               <span className="badge-dot"></span>
             </button>
           </div>
-        </div>
+          </div>
 
         <div className="content">
           {children}
