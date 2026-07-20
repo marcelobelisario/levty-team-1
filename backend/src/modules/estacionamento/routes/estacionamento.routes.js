@@ -85,6 +85,30 @@ rotas.get("/disponibilidade", EstacionamentoController.listarEstacionamentosComD
 
 /**
  * @swagger
+ * /estacionamentos/gerente/{pessoa_id}:
+ *   get:
+ *     summary: Lista os estacionamentos gerenciados por uma pessoa (gerente)
+ *     description: Retorna apenas os estacionamentos vinculados ao gerente informado.
+ *     tags: [Estacionamento]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: pessoa_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Estacionamentos do gerente.
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+rotas.get("/gerente/:pessoa_id", EstacionamentoController.listarEstacionamentosPorGerente)
+
+/**
+ * @swagger
  * /estacionamentos/cnpj/{cnpj}:
  *   get:
  *     summary: Busca estacionamento pelo CNPJ

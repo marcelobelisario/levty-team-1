@@ -52,6 +52,17 @@
 .piso-select:focus { box-shadow: 0 0 8px rgba(58, 207, 245, .3); }
 .piso-select:disabled { background: var(--neutral-50); color: #84959c; cursor: not-allowed; }
 
+.piso-estacionamento-ativo {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid var(--neutral-50);
+  border-radius: var(--radius-sm);
+  background: var(--neutral-50);
+  color: var(--ink-900);
+  font-size: 15px;
+  font-weight: 600;
+}
+
 .piso-aviso {
   border-radius: var(--radius-sm);
   padding: 12px 14px;

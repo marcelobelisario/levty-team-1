@@ -1,17 +1,33 @@
 const EstacionamentoRepository = require("../repository/EstacionamentoRepository")
+const GerenteEstacionamentoRepository = require("../../gerenteEstacionamento/repository/GerenteEstacionamentoRepository")
 
 class EstacionamentoService {
     async criarEstacionamento(dados) {
-        const estacionamentoExistente =  await EstacionamentoRepository.buscarEstacionamentoPorCnpj(dados.cnpj)
+        // pessoa_id não é coluna de estacionamento: identifica o gerente dono.
+        const { pessoa_id, ...dadosEstacionamento } = dados
+
+        const estacionamentoExistente =  await EstacionamentoRepository.buscarEstacionamentoPorCnpj(dadosEstacionamento.cnpj)
 
         if(estacionamentoExistente) {
             throw new Error("Ops! Parece que já existe um estacionamento cadastrado com  esse CNPJ!")
         }
-        return await EstacionamentoRepository.criarEstacionamento(dados)
+
+        const estacionamento = await EstacionamentoRepository.criarEstacionamento(dadosEstacionamento)
+
+        // Quem cria o estacionamento vira gerente dele (autosserviço).
+        if (pessoa_id) {
+            await GerenteEstacionamentoRepository.vincular(pessoa_id, estacionamento.id)
+        }
+
+        return estacionamento
     }
 
     async listarEstacionamentos(){
         return await EstacionamentoRepository.listarTodosEstacionamentos()
+    }
+
+    async listarEstacionamentosPorGerente(pessoaId){
+        return await GerenteEstacionamentoRepository.listarEstacionamentosPorGerente(pessoaId)
     }
 
     async listarEstacionamentosComDisponibilidade(){

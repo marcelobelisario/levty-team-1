@@ -21,6 +21,13 @@ class PessoaService {
             throw new Error("Ops! Parece que já existe uma pessoa cadastrada com esse E-mail!")
         }
 
+        const TIPOS_VALIDOS = ["motorista", "gerente"]
+        const tipo = dados.tipo ?? "motorista"
+
+        if (!TIPOS_VALIDOS.includes(tipo)) {
+            throw new Error("Tipo de usuário inválido. Use 'motorista' ou 'gerente'.")
+        }
+
         const senhaHash = await bcrypt.hash(dados.senha, 10)
 
         const novaPessoa = {
@@ -33,7 +40,10 @@ class PessoaService {
             numero: dados.numero,
             complemento: dados.complemento,
             cidade_id: dados.cidade_id,
-            is_admin: false,
+            tipo,
+            // is_admin é mantido em sincronia com o tipo por compatibilidade
+            // com as partes do sistema que ainda usam essa flag.
+            is_admin: tipo === "gerente",
             id_turno: null,
             estacionamento_id: null
         }

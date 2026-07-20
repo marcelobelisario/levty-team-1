@@ -35,6 +35,10 @@ class PisoService {
         return await PisoRepository.listarTodosPisos()
     }
 
+    async listarPisosPorEstacionamentoId(estacionamentoId){
+        return await PisoRepository.buscarPisosPorEstacionamentoId(estacionamentoId)
+    }
+
     async buscarPisoPorAndar(andar){
         return await PisoRepository.buscarPisoPorAndar(andar)
     }

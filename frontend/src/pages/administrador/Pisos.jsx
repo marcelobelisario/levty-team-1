@@ -7,18 +7,18 @@ import Button from "../../components/Button"
 import Input from "../../components/Input"
 
 import pisoService from "../../services/pisoService"
-import estacionamentoService from "../../services/estacionamentoService"
+import { useEstacionamentoAtivo } from "../../context/EstacionamentoAtivoContext"
 
 const FORMULARIO_INICIAL = {
     codigo: "",
     nome: "",
     andar: "",
     vagas: "",
-    estacionamento_id: "",
 }
 
 export default function Pisos() {
     const navigate = useNavigate()
+    const { estacionamentoAtivoId, estacionamentoAtivo } = useEstacionamentoAtivo()
 
     const [modo, setModo] = useState("lista")
 
@@ -27,44 +27,33 @@ export default function Pisos() {
     const [erroLista, setErroLista] = useState("")
 
     const [formulario, setFormulario] = useState(FORMULARIO_INICIAL)
-    const [estacionamentos, setEstacionamentos] = useState([])
-    const [carregandoEstacionamentos, setCarregandoEstacionamentos] = useState(true)
     const [erro, setErro] = useState("")
     const [sucesso, setSucesso] = useState("")
     const [salvando, setSalvando] = useState(false)
 
     const carregarPisos = useCallback(async () => {
+        if (!estacionamentoAtivoId) {
+            setPisos([])
+            setCarregandoPisos(false)
+            return
+        }
+
         setCarregandoPisos(true)
         setErroLista("")
 
         try {
-            const resultado = await pisoService.listarTodosPisos()
+            const resultado = await pisoService.listarPorEstacionamento(estacionamentoAtivoId)
             setPisos(resultado || [])
         } catch (error) {
             setErroLista(error.message)
         } finally {
             setCarregandoPisos(false)
         }
-    }, [])
+    }, [estacionamentoAtivoId])
 
     useEffect(() => {
         carregarPisos()
     }, [carregarPisos])
-
-    useEffect(() => {
-        async function carregarEstacionamentos() {
-            try {
-                const resultado = await estacionamentoService.listarTodos()
-                setEstacionamentos(resultado || [])
-            } catch (error) {
-                setErro(error.message)
-            } finally {
-                setCarregandoEstacionamentos(false)
-            }
-        }
-
-        carregarEstacionamentos()
-    }, [])
 
     function handleChange(campo) {
         return (e) => setFormulario((atual) => ({ ...atual, [campo]: e.target.value }))
@@ -108,8 +97,8 @@ export default function Pisos() {
             return
         }
 
-        if (!formulario.estacionamento_id) {
-            setErro("Selecione o estacionamento ao qual o piso pertence.")
+        if (!estacionamentoAtivoId) {
+            setErro("Selecione um estacionamento ativo no topo antes de cadastrar pisos.")
             return
         }
 
@@ -121,7 +110,7 @@ export default function Pisos() {
                 nome: formulario.nome.trim(),
                 andar,
                 vagas,
-                estacionamento_id: formulario.estacionamento_id,
+                estacionamento_id: estacionamentoAtivoId,
             })
 
             setFormulario(FORMULARIO_INICIAL)
@@ -213,33 +202,15 @@ export default function Pisos() {
                         </div>
 
                         <div className="piso-campo">
-                            <label htmlFor="estacionamento_id">Estacionamento</label>
-                            <select
-                                id="estacionamento_id"
-                                className="piso-select"
-                                value={formulario.estacionamento_id}
-                                onChange={handleChange("estacionamento_id")}
-                                disabled={carregandoEstacionamentos}
-                                required
-                            >
-                                <option value="">
-                                    {carregandoEstacionamentos
-                                        ? "Carregando estacionamentos..."
-                                        : "Selecione um estacionamento"}
-                                </option>
-
-                                {estacionamentos.map((estacionamento) => (
-                                    <option key={estacionamento.id} value={estacionamento.id}>
-                                        {estacionamento.nome}
-                                    </option>
-                                ))}
-                            </select>
-
-                            {!carregandoEstacionamentos && estacionamentos.length === 0 && (
-                                <span className="ajuda">
-                                    Nenhum estacionamento cadastrado. Cadastre um estacionamento antes de criar pisos.
-                                </span>
-                            )}
+                            <label>Estacionamento</label>
+                            <div className="piso-estacionamento-ativo">
+                                {estacionamentoAtivo
+                                    ? estacionamentoAtivo.nome
+                                    : "Nenhum estacionamento ativo selecionado"}
+                            </div>
+                            <span className="ajuda">
+                                O piso será criado no estacionamento ativo. Troque no seletor do topo, se necessário.
+                            </span>
                         </div>
 
                         {erro && <div className="piso-aviso piso-aviso--erro">{erro}</div>}
@@ -255,7 +226,7 @@ export default function Pisos() {
                                 Limpar
                             </button>
 
-                            <Button type="submit" disabled={salvando || carregandoEstacionamentos}>
+                            <Button type="submit" disabled={salvando || !estacionamentoAtivoId}>
                                 {salvando ? "Cadastrando..." : "Cadastrar piso"}
                             </Button>
                         </div>

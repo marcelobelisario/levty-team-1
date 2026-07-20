@@ -35,7 +35,8 @@ export default function Login() {
 
         try {
             const pessoa = await login(formulario)
-            if (pessoa.is_admin) {
+            const ehGerente = pessoa.tipo === "gerente" || pessoa.is_admin
+            if (ehGerente) {
                 navigate("/admin/dashboard")
             } else {
                 navigate("/motorista")

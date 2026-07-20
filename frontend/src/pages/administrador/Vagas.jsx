@@ -8,6 +8,7 @@ import Input from "../../components/Input"
 
 import vagaService from "../../services/vagaService"
 import pisoService from "../../services/pisoService"
+import { useEstacionamentoAtivo } from "../../context/EstacionamentoAtivoContext"
 
 const FORMULARIO_INICIAL = {
     codigo: "",
@@ -19,6 +20,7 @@ const FORMULARIO_INICIAL = {
 
 export default function Vagas() {
     const navigate = useNavigate()
+    const { estacionamentoAtivoId } = useEstacionamentoAtivo()
 
     const [modo, setModo] = useState("lista")
 
@@ -34,18 +36,24 @@ export default function Vagas() {
     const [salvando, setSalvando] = useState(false)
 
     const carregarVagas = useCallback(async () => {
+        if (!estacionamentoAtivoId) {
+            setVagas([])
+            setCarregandoVagas(false)
+            return
+        }
+
         setCarregandoVagas(true)
         setErroLista("")
 
         try {
-            const resultado = await vagaService.listarTodasVagas()
+            const resultado = await vagaService.buscarVagasPorEstacionamentoId(estacionamentoAtivoId)
             setVagas(resultado || [])
         } catch (error) {
             setErroLista(error.message)
         } finally {
             setCarregandoVagas(false)
         }
-    }, [])
+    }, [estacionamentoAtivoId])
 
     useEffect(() => {
         carregarVagas()
@@ -53,8 +61,16 @@ export default function Vagas() {
 
     useEffect(() => {
         async function carregarPisos() {
+            if (!estacionamentoAtivoId) {
+                setPisos([])
+                setCarregandoPisos(false)
+                return
+            }
+
+            setCarregandoPisos(true)
+
             try {
-                const resultado = await pisoService.listarTodosPisos()
+                const resultado = await pisoService.listarPorEstacionamento(estacionamentoAtivoId)
                 setPisos(resultado || [])
             } catch (error) {
                 setErro(error.message)
@@ -64,7 +80,7 @@ export default function Vagas() {
         }
 
         carregarPisos()
-    }, [])
+    }, [estacionamentoAtivoId])
 
     function handleChange(campo) {
         return (e) => {

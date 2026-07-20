@@ -8,6 +8,10 @@ async function listarTodos() {
     return await api.get('/estacionamentos')
 }
 
+async function listarPorGerente(pessoaId) {
+    return await api.get(`/estacionamentos/gerente/${pessoaId}`)
+}
+
 async function listarComDisponibilidade() {
     return await api.get('/estacionamentos/disponibilidade')
 }
@@ -31,6 +35,7 @@ async function excluir(id) {
 export default {
     cadastrar,
     listarTodos,
+    listarPorGerente,
     listarComDisponibilidade,
     buscarPorId,
     buscarPorCnpj,
