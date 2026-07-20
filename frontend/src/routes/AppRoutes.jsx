@@ -11,6 +11,7 @@ import Dashboard from "../pages/administrador/Dashboard"
 import Estacionamento from "../pages/administrador/Estacionamento"
 import Pisos from "../pages/administrador/Pisos"
 import Vagas from "../pages/administrador/Vagas"
+import EditarVaga from "../pages/administrador/EditarVaga"
 
 export default function AppRoutes() {
     return (
@@ -68,6 +69,17 @@ export default function AppRoutes() {
                     <PrivateRoute>
                         <AdminLayout>
                             <Vagas />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+
+            <Route
+                path="/admin/vagas/:id/editar"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <EditarVaga />
                         </AdminLayout>
                     </PrivateRoute>
                 }

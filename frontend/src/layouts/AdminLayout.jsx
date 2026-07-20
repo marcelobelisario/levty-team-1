@@ -11,11 +11,19 @@ const TITULOS = {
 
 const TITULO_PADRAO = { eyebrow: 'Visão geral', titulo: 'Dashboard' };
 
+function obterTitulo(pathname) {
+  if (/^\/admin\/vagas\/.+\/editar$/.test(pathname)) {
+    return { eyebrow: 'Operação', titulo: 'Editar vaga' };
+  }
+
+  return TITULOS[pathname] || TITULO_PADRAO;
+}
+
 export default function AdminLayout({ children }) {
   const { usuario, logout } = useAuth();
   const { pathname } = useLocation();
 
-  const { eyebrow, titulo } = TITULOS[pathname] || TITULO_PADRAO;
+  const { eyebrow, titulo } = obterTitulo(pathname);
 
   return (
     <div className="app">

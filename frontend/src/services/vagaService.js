@@ -20,10 +20,15 @@ async function buscarVagasDesocupadas() {
     return await api.get('/vagas/desocupadas')
 }
 
+async function editarVaga(id, dados) {
+    return await api.put(`/vagas/${id}`, dados)
+}
+
 export default {
     cadastrarVaga,
     listarTodasVagas,
     buscarVagaPorId,
     buscarVagaPorPisoId,
     buscarVagasDesocupadas,
+    editarVaga,
 }

@@ -64,6 +64,21 @@ class VagaController {
             })
         }
     }
+
+    async editarVaga(req, res){
+        try {
+            const vaga = await VagaService.editarVaga(
+                req.params.id,
+                req.body
+            )
+
+            return res.status(200).json(vaga)
+        } catch (error) {
+            return res.status(400).json({
+                erro: error.message
+            })
+        }
+    }
 }
 
 module.exports = new VagaController()
