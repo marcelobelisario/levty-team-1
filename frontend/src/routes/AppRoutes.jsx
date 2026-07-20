@@ -9,6 +9,9 @@ import PrivateRoute from "./PrivateRoute"
 import AdminLayout from "../layouts/AdminLayout"
 import Dashboard from "../pages/administrador/Dashboard"
 
+import ClienteLayout from "../layouts/ClienteLayout"
+import VisaoGeral from "../pages/cliente/VisaoGeral"
+
 export default function AppRoutes() {
     return (
         <Routes>
@@ -22,6 +25,18 @@ export default function AppRoutes() {
                 element={
                     <PrivateRoute>
                         <Painel />
+                    </PrivateRoute>
+                }
+            />
+
+            <Route path="/cliente" element={<Navigate to="/cliente/visao-geral" replace />} />
+            <Route
+                path="/cliente/visao-geral"
+                element={
+                    <PrivateRoute>
+                        <ClienteLayout>
+                            <VisaoGeral />
+                        </ClienteLayout>
                     </PrivateRoute>
                 }
             />
