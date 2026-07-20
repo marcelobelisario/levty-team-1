@@ -13,6 +13,7 @@ import Logo from "../../assets/logo.png"
 import autenticacaoService from "../../services/autenticacaoService"
 
 const FORMULARIO_INICIAL = {
+    tipo: "motorista",
     nome: "",
     email: "",
     cpf: "",
@@ -34,6 +35,10 @@ export default function Cadastro() {
 
     function handleChange(campo) {
         return (e) => setFormulario((atual) => ({ ...atual, [campo]: e.target.value }))
+    }
+
+    function selecionarTipo(tipo) {
+        setFormulario((atual) => ({ ...atual, tipo }))
     }
 
     function handleSelecionarCidade(cidade) {
@@ -58,12 +63,12 @@ export default function Cadastro() {
 
         try {
             const {
-                nome, email, cpf, senha,
+                tipo, nome, email, cpf, senha,
                 logradouro, bairro, numero, complemento, cidade_id,
             } = formulario
 
             await autenticacaoService.cadastrar({
-                nome, email, cpf, senha,
+                tipo, nome, email, cpf, senha,
                 logradouro, bairro, complemento, cidade_id,
                 numero: Number(numero),
             })
@@ -107,12 +112,39 @@ export default function Cadastro() {
                     <span className="auth-eyebrow">Novo cadastro</span>
 
                     <Text className="auth-titulo">
-                        Criar conta de cliente
+                        Criar conta
                     </Text>
 
                     <Text className="auth-subtitulo">
-                        Preencha seus dados para começar a usar o estacionamento.
+                        Preencha seus dados para começar a usar o HubParking.
                     </Text>
+
+                    <div className="auth-campo">
+                        <label>Como você vai usar o HubParking?</label>
+                        <div className="auth-tipo" role="radiogroup" aria-label="Tipo de conta">
+                            <button
+                                type="button"
+                                role="radio"
+                                aria-checked={formulario.tipo === "motorista"}
+                                className={`auth-tipo-opcao${formulario.tipo === "motorista" ? " auth-tipo-opcao--ativo" : ""}`}
+                                onClick={() => selecionarTipo("motorista")}
+                            >
+                                <span className="auth-tipo-titulo">Sou motorista</span>
+                                <span className="auth-tipo-descricao">Quero encontrar e reservar vagas.</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                role="radio"
+                                aria-checked={formulario.tipo === "gerente"}
+                                className={`auth-tipo-opcao${formulario.tipo === "gerente" ? " auth-tipo-opcao--ativo" : ""}`}
+                                onClick={() => selecionarTipo("gerente")}
+                            >
+                                <span className="auth-tipo-titulo">Sou gerente</span>
+                                <span className="auth-tipo-descricao">Quero gerenciar meus estacionamentos.</span>
+                            </button>
+                        </div>
+                    </div>
 
                     <div className="auth-campo">
                         <label htmlFor="nome">Nome completo</label>

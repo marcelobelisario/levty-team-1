@@ -8,6 +8,10 @@ async function listarTodosPisos() {
     return await api.get('/pisos')
 }
 
+async function listarPorEstacionamento(estacionamentoId) {
+    return await api.get(`/pisos/estacionamento/${estacionamentoId}`)
+}
+
 async function buscarPisoPorId(id) {
     return await api.get(`/pisos/${id}`)
 }
@@ -31,6 +35,7 @@ async function excluirPiso(id) {
 export default {
     cadastrarPiso,
     listarTodosPisos,
+    listarPorEstacionamento,
     buscarPisoPorId,
     buscarPisoPorCodigo,
     buscarPisoPorAndar,

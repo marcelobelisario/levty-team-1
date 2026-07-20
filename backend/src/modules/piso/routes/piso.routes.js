@@ -124,6 +124,29 @@ rotas.get('/andar/:andar', PisoController.buscarPisoPorAndar)
 
 /**
  * @swagger
+ * /pisos/estacionamento/{estacionamento_id}:
+ *   get:
+ *     summary: Lista os pisos de um estacionamento
+ *     tags: [Piso]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: estacionamento_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Pisos do estacionamento.
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+rotas.get('/estacionamento/:estacionamento_id', PisoController.listarPisosPorEstacionamentoId)
+
+/**
+ * @swagger
  * /pisos/{id}:
  *   put:
  *     summary: Edita um piso

@@ -8,6 +8,8 @@ import Input from "../../components/Input"
 import CidadeSelect from "../../components/CidadeSelect"
 
 import estacionamentoService from "../../services/estacionamentoService"
+import { useAuth } from "../../context/AuthContext"
+import { useEstacionamentoAtivo } from "../../context/EstacionamentoAtivoContext"
 
 const FORMULARIO_INICIAL = {
     nome: "",
@@ -24,6 +26,8 @@ const FORMULARIO_INICIAL = {
 
 export default function Estacionamento() {
     const navigate = useNavigate()
+    const { usuario } = useAuth()
+    const { recarregar: recarregarEstacionamentosAtivos } = useEstacionamentoAtivo()
 
     const [modo, setModo] = useState("lista")
 
@@ -43,14 +47,14 @@ export default function Estacionamento() {
         setErroLista("")
 
         try {
-            const resultado = await estacionamentoService.listarTodos()
+            const resultado = await estacionamentoService.listarPorGerente(usuario.id)
             setEstacionamentos(resultado || [])
         } catch (error) {
             setErroLista(error.message)
         } finally {
             setCarregandoLista(false)
         }
-    }, [])
+    }, [usuario.id])
 
     useEffect(() => {
         carregarEstacionamentos()
@@ -128,6 +132,8 @@ export default function Estacionamento() {
                 telefone: formulario.telefone.trim(),
                 ativo: formulario.ativo,
                 cidade_id: cidade.id,
+                // Vincula o estacionamento ao gerente logado (ele vira o dono).
+                pessoa_id: usuario.id,
             }
 
             if (formulario.inscricao_estadual.trim() !== "") {
@@ -141,6 +147,8 @@ export default function Estacionamento() {
             setCidadeSelectKey((atual) => atual + 1)
             setSucesso(`Estacionamento cadastrado com sucesso: ${estacionamento.nome}.`)
             carregarEstacionamentos()
+            // Atualiza o seletor de estacionamento ativo no topo do painel.
+            recarregarEstacionamentosAtivos()
         } catch (error) {
             setErro(error.message)
         } finally {

@@ -46,8 +46,22 @@ class PisoController {
     async listarTodosPisos(req, res) {
         try {
             const piso = await PisoService.listarTodosPisos()
-            
+
             return res.status(200).json(piso)
+        } catch (error) {
+            return res.status(400).json({
+                erro: error.message
+            })
+        }
+    }
+
+    async listarPisosPorEstacionamentoId(req, res) {
+        try {
+            const pisos = await PisoService.listarPisosPorEstacionamentoId(
+                req.params.estacionamento_id
+            )
+
+            return res.status(200).json(pisos)
         } catch (error) {
             return res.status(400).json({
                 erro: error.message

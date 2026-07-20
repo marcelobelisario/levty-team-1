@@ -1,6 +1,36 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import './AdminLayout.css';
 import { useAuth } from '../context/AuthContext';
+import { EstacionamentoAtivoProvider, useEstacionamentoAtivo } from '../context/EstacionamentoAtivoContext';
+
+function SeletorEstacionamento() {
+  const { estacionamentos, estacionamentoAtivoId, selecionar, carregando } = useEstacionamentoAtivo();
+
+  if (carregando) {
+    return <div className="estac-seletor estac-seletor--vazio">Carregando estacionamentos...</div>;
+  }
+
+  if (estacionamentos.length === 0) {
+    return <div className="estac-seletor estac-seletor--vazio">Nenhum estacionamento — cadastre um</div>;
+  }
+
+  return (
+    <label className="estac-seletor">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 21V7l8-4 8 4v14M9 21v-6h6v6" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg>
+      <select
+        value={estacionamentoAtivoId || ''}
+        onChange={(e) => selecionar(e.target.value)}
+        aria-label="Estacionamento ativo"
+      >
+        {estacionamentos.map((estacionamento) => (
+          <option key={estacionamento.id} value={estacionamento.id}>
+            {estacionamento.nome}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
 
 const TITULOS = {
   '/admin/dashboard': { eyebrow: 'Visão geral', titulo: 'Dashboard' },
@@ -35,6 +65,7 @@ export default function AdminLayout({ children }) {
   const { eyebrow, titulo } = obterTitulo(pathname);
 
   return (
+    <EstacionamentoAtivoProvider>
     <div className="app">
       <aside className="sidebar">
         <div className="brand-mark"><span className="dot"></span> <span>HubParking</span></div>
@@ -108,6 +139,7 @@ export default function AdminLayout({ children }) {
             <h1 id="topbar-title">{titulo}</h1>
           </div>
           <div className="topbar-actions">
+            <SeletorEstacionamento />
             <div className="search-box">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" /><path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
               <input placeholder="Buscar placa, vaga, pessoa..." />
@@ -124,5 +156,6 @@ export default function AdminLayout({ children }) {
         </div>
       </div>
     </div>
+    </EstacionamentoAtivoProvider>
   );
 }

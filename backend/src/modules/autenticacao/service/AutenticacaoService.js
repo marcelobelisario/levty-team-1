@@ -26,6 +26,7 @@ class AutenticacaoService {
             {
                 id: pessoa.id,
                 email: pessoa.email,
+                tipo: pessoa.tipo,
                 isAdmin: pessoa.is_admin
             },
             process.env.JWT_SECRET,
