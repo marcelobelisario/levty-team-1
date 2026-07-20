@@ -10,6 +10,7 @@ import AdminLayout from "../layouts/AdminLayout"
 import Dashboard from "../pages/administrador/Dashboard"
 import Estacionamento from "../pages/administrador/Estacionamento"
 import Pisos from "../pages/administrador/Pisos"
+import Turnos from "../pages/administrador/Turnos"
 
 export default function AppRoutes() {
     return (
@@ -56,6 +57,16 @@ export default function AppRoutes() {
                     <PrivateRoute>
                         <AdminLayout>
                             <Pisos />
+                        </AdminLayout>
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/admin/turnos"
+                element={
+                    <PrivateRoute>
+                        <AdminLayout>
+                            <Turnos />
                         </AdminLayout>
                     </PrivateRoute>
                 }

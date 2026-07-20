@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 const TITULOS = {
   '/admin/dashboard': { eyebrow: 'Visão geral', titulo: 'Dashboard' },
   '/admin/estacionamento': { eyebrow: 'Cadastros', titulo: 'Estacionamento' },
-  '/admin/pisos': { eyebrow: 'Cadastros', titulo: 'Pisos' },
+  '/admin/pisos': { eyebrow: 'Cadastros', titulo: 'Pisos' },'/admin/turnos': { eyebrow: 'Operação', titulo: 'Turnos' },
 };
 
 const TITULO_PADRAO = { eyebrow: 'Visão geral', titulo: 'Dashboard' };
@@ -51,10 +51,13 @@ export default function AdminLayout({ children }) {
         </NavLink>
 
         <div className="nav-group-label">Operação</div>
-        <button className="nav-item" data-screen="turnos">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-          <span>Turnos</span>
-        </button>
+<NavLink
+  to="/admin/turnos"
+  className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+  <span>Turnos</span>
+</NavLink>
         <button className="nav-item" data-screen="vagas">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/><rect x="14" y="4" width="7" height="16" rx="1.4" stroke="currentColor" strokeWidth="1.8"/></svg>
           <span>Vagas</span>
