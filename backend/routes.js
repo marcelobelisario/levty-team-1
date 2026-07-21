@@ -12,6 +12,7 @@ const veiculoRoutes = require("./src/modules/veiculo/routes/veiculo.routes")
 const veiculoVagaRoutes = require("./src/modules/veiculoVaga/routes/veiculoVaga.routes")
 const autenticacaoRoutes = require("./src/modules/autenticacao/routes/autenticacao.routes")
 const cidadeRoutes = require("./src/modules/cidade/routes/cidade.routes")
+const reservaRoutes = require("./src/modules/reserva/routes/reserva.routes")
 
 const rotas = Router()
 
@@ -27,6 +28,6 @@ rotas.use('/veiculo',         authMiddleware, veiculoRoutes)
 rotas.use('/veiculo-vaga',    authMiddleware, veiculoVagaRoutes)
 rotas.use('/dashboard',       authMiddleware, adminMiddleware)
 rotas.use('/cliente',         authMiddleware)
-rotas.use('/reservas',        authMiddleware)
+rotas.use('/reservas',        authMiddleware, reservaRoutes)
 
 module.exports = rotas

@@ -15,6 +15,25 @@ class VeiculoVagaRepository {
             .select('*')
     }
 
+    async listarMovimentacoesPorEstacionamentoId(estacionamentoId, limite = 8) {
+        return await db("veiculo_vaga")
+            .join("vaga", "vaga.id", "veiculo_vaga.vaga_id")
+            .join("piso", "piso.id", "vaga.piso_id")
+            .join("veiculo", "veiculo.id", "veiculo_vaga.veiculo_id")
+            .where("piso.estacionamento_id", estacionamentoId)
+            .select(
+                "veiculo_vaga.id",
+                "veiculo.placa",
+                "vaga.nome as vaga_nome",
+                "vaga.codigo as vaga_codigo",
+                "piso.nome as piso_nome",
+                "veiculo_vaga.estacionado_em",
+                "veiculo_vaga.desocupado_em"
+            )
+            .orderBy("veiculo_vaga.estacionado_em", "desc")
+            .limit(limite)
+    }
+
     async buscarPorId(id) {
         return db("veiculo_vaga")
             .where({ id })
