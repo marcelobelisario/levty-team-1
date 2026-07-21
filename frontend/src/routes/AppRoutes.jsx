@@ -74,18 +74,18 @@ export default function AppRoutes() {
             <Route
                 path="/admin/dashboard"
                 element={
-                    <PrivateRoute>
+                    <PrivateRoute apenasAdmin>
                         <AdminLayout>
                             <Dashboard />
                         </AdminLayout>
                     </PrivateRoute>
                 }
             />
-            
+
             <Route
                 path="/admin/veiculos"
                 element={
-                    <PrivateRoute>
+                    <PrivateRoute apenasAdmin>
                         <AdminLayout>
                             <Veiculos />
                         </AdminLayout>
@@ -96,7 +96,7 @@ export default function AppRoutes() {
             <Route
                 path="/admin/estacionamento"
                 element={
-                    <PrivateRoute>
+                    <PrivateRoute apenasAdmin>
                         <AdminLayout>
                             <Estacionamento />
                         </AdminLayout>
@@ -107,7 +107,7 @@ export default function AppRoutes() {
             <Route
                 path="/admin/estacionamento/:id/editar"
                 element={
-                    <PrivateRoute>
+                    <PrivateRoute apenasAdmin>
                         <AdminLayout>
                             <EditarEstacionamento />
                         </AdminLayout>
@@ -118,17 +118,18 @@ export default function AppRoutes() {
             <Route
                 path="/admin/pisos"
                 element={
-                    <PrivateRoute>
+                    <PrivateRoute apenasAdmin>
                         <AdminLayout>
                             <Pisos />
                         </AdminLayout>
                     </PrivateRoute>
                 }
             />
+
             <Route
                 path="/admin/turnos"
                 element={
-                    <PrivateRoute>
+                    <PrivateRoute apenasAdmin>
                         <AdminLayout>
                             <Turnos />
                         </AdminLayout>
@@ -139,7 +140,7 @@ export default function AppRoutes() {
             <Route
                 path="/admin/pisos/:id/editar"
                 element={
-                    <PrivateRoute>
+                    <PrivateRoute apenasAdmin>
                         <AdminLayout>
                             <EditarPiso />
                         </AdminLayout>
@@ -150,7 +151,7 @@ export default function AppRoutes() {
             <Route
                 path="/admin/vagas"
                 element={
-                    <PrivateRoute>
+                    <PrivateRoute apenasAdmin>
                         <AdminLayout>
                             <Vagas />
                         </AdminLayout>
@@ -161,7 +162,7 @@ export default function AppRoutes() {
             <Route
                 path="/admin/vagas/:id/editar"
                 element={
-                    <PrivateRoute>
+                    <PrivateRoute apenasAdmin>
                         <AdminLayout>
                             <EditarVaga />
                         </AdminLayout>
