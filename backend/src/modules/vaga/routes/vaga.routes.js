@@ -1,5 +1,6 @@
 const { Router } = require("express")
 
+const adminMiddleware = require("../../../middlewares/adminMiddleware")
 const VagaController = require('../controller/VagaController')
 
 const rotas = Router()
@@ -36,7 +37,7 @@ const rotas = Router()
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-rotas.post('/', VagaController.cadastrarVaga)
+rotas.post('/', adminMiddleware, VagaController.cadastrarVaga)
 
 /**
  * @swagger
@@ -181,6 +182,6 @@ rotas.get('/:id', VagaController.buscarVagaPorId)
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-rotas.put('/:id', VagaController.editarVaga)
+rotas.put('/:id', adminMiddleware, VagaController.editarVaga)
 
 module.exports = rotas

@@ -1,5 +1,6 @@
 const { Router } = require('express')
 
+const adminMiddleware = require("../../../middlewares/adminMiddleware")
 const TurnoController= require('../controller/TurnoController')
 
 const rotas = Router()
@@ -35,7 +36,7 @@ const rotas = Router()
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-rotas.post('/', TurnoController.cadastrarTurno)
+rotas.post('/', adminMiddleware, TurnoController.cadastrarTurno)
 
 /**
  * @swagger
@@ -114,7 +115,7 @@ rotas.get('/', TurnoController.listarTodosTurnos)
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-rotas.put('/:id', TurnoController.editarTurno)
+rotas.put('/:id', adminMiddleware, TurnoController.editarTurno)
 
 /**
  * @swagger
@@ -136,6 +137,6 @@ rotas.put('/:id', TurnoController.editarTurno)
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-rotas.delete('/:id', TurnoController.excluirTurno)
+rotas.delete('/:id', adminMiddleware, TurnoController.excluirTurno)
 
 module.exports = rotas

@@ -1,5 +1,6 @@
 const { Router } = require("express")
 
+const adminMiddleware = require("../../../middlewares/adminMiddleware")
 const EstacionamentoController = require("../controller/EstacionamentoController")
 
 const rotas = Router()
@@ -48,7 +49,7 @@ const rotas = Router()
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-rotas.post("/", EstacionamentoController.cadastrarEstacionamento)
+rotas.post("/", adminMiddleware, EstacionamentoController.cadastrarEstacionamento)
 
 /**
  * @swagger
@@ -205,7 +206,7 @@ rotas.get("/id/:id", EstacionamentoController.buscarEstacionamentoPorId)
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-rotas.put("/:id", EstacionamentoController.editarEstacionamento)
+rotas.put("/:id", adminMiddleware, EstacionamentoController.editarEstacionamento)
 
 /**
  * @swagger
@@ -227,6 +228,6 @@ rotas.put("/:id", EstacionamentoController.editarEstacionamento)
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-rotas.delete("/Excluir/:id", EstacionamentoController.excluirEstacionamento)
+rotas.delete("/Excluir/:id", adminMiddleware, EstacionamentoController.excluirEstacionamento)
 
 module.exports = rotas
