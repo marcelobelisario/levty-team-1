@@ -7,6 +7,7 @@ import estacionamentoService from "../../services/estacionamentoService"
 import vagaService from "../../services/vagaService"
 import veiculoService from "../../services/veiculoService"
 import reservaService from "../../services/reservaService"
+import reservaAntecipadaService from "../../services/reservaAntecipadaService"
 import { useAuth } from "../../context/AuthContext"
 
 function situacaoDaVaga(vaga) {
@@ -138,6 +139,31 @@ export default function EstacionamentoVagas() {
         }
     }
 
+    async function confirmarReservar() {
+        if (!veiculoParaEstacionar || !vagaSelecionada) {
+            return
+        }
+
+        setCarregandoAcao(true)
+        setErroAcao("")
+
+        try {
+            await reservaAntecipadaService.cadastrarReserva({
+                pessoa_id: usuario.id,
+                vaga_id: vagaSelecionada.id,
+                veiculo_id: veiculoParaEstacionar,
+            })
+            setSucessoAcao(`Vaga ${vagaSelecionada.nome} reservada com sucesso!`)
+            setVagaSelecionada(null)
+            setVeiculoParaEstacionar("")
+            await carregar()
+        } catch (error) {
+            setErroAcao(error.message)
+        } finally {
+            setCarregandoAcao(false)
+        }
+    }
+
     async function registrarSaida() {
         if (!ocupacaoAtiva) {
             return
@@ -156,6 +182,7 @@ export default function EstacionamentoVagas() {
             setCarregandoAcao(false)
         }
     }
+
     return (
         <section className="detalhe">
 
@@ -243,7 +270,15 @@ export default function EstacionamentoVagas() {
                                     onClick={confirmarEstacionar}
                                     disabled={carregandoAcao}
                                 >
-                                    {carregandoAcao ? "Estacionando..." : "Confirmar"}
+                                    {carregandoAcao ? "Estacionando..." : "Estacionar agora"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="detalhe-botao-confirmar"
+                                    onClick={confirmarReservar}
+                                    disabled={carregandoAcao}
+                                >
+                                    {carregandoAcao ? "Reservando..." : "Reservar para depois"}
                                 </button>
                                 <button
                                     type="button"
